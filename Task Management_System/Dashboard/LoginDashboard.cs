@@ -1,20 +1,13 @@
 ﻿using DevExpress.XtraEditors;
+using Microsoft.Data.Sqlite;  // ✅ Only this, remove System.Data.SQLite
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using Microsoft.Data.Sqlite;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Task_Management_System.Dashboard;
 using Task_Management_System.Data;
-using Task_Management_System.Models;
 
 namespace Task_Management_System.Dashboards
 {
-    public partial class LoginDashboard : DevExpress.XtraEditors.XtraForm
+    public partial class LoginDashboard : XtraForm
     {
         DataBase db = new DataBase();
 
@@ -25,36 +18,95 @@ namespace Task_Management_System.Dashboards
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
+            string username = txtBoxUsername.Text.Trim();
+            string password = txtBoxPassword.Text.Trim();
+
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                XtraMessageBox.Show("Please enter username and password!");
+                return;
+            }
+
+            try
+            {
+                // ✅ Step 1: Check Admin table first
+                if (TryAdminLogin(username, password)) return;
+
+                // ✅ Step 2: Check Student login
+                if (TryStudentLogin(username, password)) return;
+
+                // ❌ Neither matched
+                XtraMessageBox.Show("Invalid Username or Password!",
+                    "Login Failed",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
+        private bool TryAdminLogin(string username, string password)
+        {
             using (SqliteConnection con = db.GetConnection())
             {
-                try
+                con.Open();
+                string query = "SELECT * FROM User WHERE Username=@Username AND Password=@Password";
+                SqliteCommand cmd = new SqliteCommand(query, con);
+                cmd.Parameters.AddWithValue("@Username", username);
+                cmd.Parameters.AddWithValue("@Password", password);
+                SqliteDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
                 {
-                    con.Open();
-                    string username = txtBoxUsername.Text;
-                    string password = txtBoxPassword.Text;
-                    string query = @"SELECT * FROM User
-                              WHERE Username=@Username
-                              AND Password=@Password";
-                    SqliteCommand command = new SqliteCommand(query, con);
-                    command.Parameters.AddWithValue("@Username", username);
-                    command.Parameters.AddWithValue("@Password", password);
-                    SqliteDataReader reader = command.ExecuteReader();
-                    if (reader.Read())
-                    {
-                        XtraMessageBox.Show("Login Successfully!");
-                        AdminDashboard dashboard = new AdminDashboard(username);
-                        dashboard.Show();
-                        this.Hide();
-                    }
-                    else
-                    {
-                        XtraMessageBox.Show("Invalid Username or Password!");
-                    }
+                    XtraMessageBox.Show($"Welcome Admin: {username}!",
+                        "Login Success",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+
+                    AdminDashboard dashboard = new AdminDashboard(username);
+                    dashboard.Show();
+                    this.Hide();
+                    return true;
                 }
-                catch (Exception ex)
+                return false;
+            }
+        }
+
+        private bool TryStudentLogin(string username, string password)
+        {
+            using (SqliteConnection con = db.GetConnection())
+            {
+                con.Open();
+                string query = @"
+                    SELECT s.StudentID, s.FirstName, s.LastName, s.Section
+                    FROM StudentTask s
+                    INNER JOIN StudentLogin l ON s.StudentID = l.StudentID
+                    WHERE l.Username = @Username AND l.Password = @Password";
+
+                SqliteCommand cmd = new SqliteCommand(query, con);
+                cmd.Parameters.AddWithValue("@Username", username);
+                cmd.Parameters.AddWithValue("@Password", password);
+                SqliteDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
                 {
-                    XtraMessageBox.Show(ex.Message);
+                    string studentId = reader["StudentID"].ToString();
+                    string firstName = reader["FirstName"].ToString();
+
+                    XtraMessageBox.Show($"Welcome, {firstName}!",
+                        "Login Success",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+
+                    // ✅ Open StudentDashboard
+                    //StudentDashboard sd = new StudentDashboard(studentId);
+                    //sd.Show();
+                    //this.Hide();
+                    //return true;
                 }
+                return false;
             }
         }
     }

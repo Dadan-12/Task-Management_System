@@ -28,7 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            panelGrid = new System.Windows.Forms.Panel();
+            layoutControl1 = new DevExpress.XtraLayout.LayoutControl();
+            Root = new DevExpress.XtraLayout.LayoutControlGroup();
+            gridColumn8 = new DevExpress.XtraGrid.Columns.GridColumn();
+            gridColumn9 = new DevExpress.XtraGrid.Columns.GridColumn();
+            gridColumn10 = new DevExpress.XtraGrid.Columns.GridColumn();
+            gridColumn11 = new DevExpress.XtraGrid.Columns.GridColumn();
+            gridColumn12 = new DevExpress.XtraGrid.Columns.GridColumn();
+            gridColumn13 = new DevExpress.XtraGrid.Columns.GridColumn();
             MainViewDashboard = new DevExpress.XtraGrid.GridControl();
             gvDashboard = new DevExpress.XtraGrid.Views.Grid.GridView();
             gridColumn1 = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -39,31 +46,97 @@
             gridColumn6 = new DevExpress.XtraGrid.Columns.GridColumn();
             gridColumn7 = new DevExpress.XtraGrid.Columns.GridColumn();
             gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
-            groupBox1 = new System.Windows.Forms.GroupBox();
-            panelGrid.SuspendLayout();
+            layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
+            ((System.ComponentModel.ISupportInitialize)layoutControl1).BeginInit();
+            layoutControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)Root).BeginInit();
             ((System.ComponentModel.ISupportInitialize)MainViewDashboard).BeginInit();
             ((System.ComponentModel.ISupportInitialize)gvDashboard).BeginInit();
             ((System.ComponentModel.ISupportInitialize)gridView1).BeginInit();
-            groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)layoutControlItem1).BeginInit();
             SuspendLayout();
             // 
-            // panelGrid
+            // layoutControl1
             // 
-            panelGrid.Controls.Add(groupBox1);
-            panelGrid.Dock = System.Windows.Forms.DockStyle.Bottom;
-            panelGrid.Location = new System.Drawing.Point(0, 268);
-            panelGrid.Name = "panelGrid";
-            panelGrid.Size = new System.Drawing.Size(870, 361);
-            panelGrid.TabIndex = 0;
+            layoutControl1.Controls.Add(MainViewDashboard);
+            layoutControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            layoutControl1.Location = new System.Drawing.Point(0, 236);
+            layoutControl1.Name = "layoutControl1";
+            layoutControl1.Root = Root;
+            layoutControl1.Size = new System.Drawing.Size(870, 393);
+            layoutControl1.TabIndex = 9;
+            layoutControl1.Text = "layoutControl1";
+            // 
+            // Root
+            // 
+            Root.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
+            Root.GroupBordersVisible = false;
+            Root.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] { layoutControlItem1 });
+            Root.Name = "Root";
+            Root.Size = new System.Drawing.Size(870, 393);
+            Root.TextVisible = false;
+            // 
+            // gridColumn8
+            // 
+            gridColumn8.Caption = "Photo";
+            gridColumn8.FieldName = "Photo";
+            gridColumn8.Name = "gridColumn8";
+            gridColumn8.OptionsColumn.AllowEdit = false;
+            gridColumn8.Visible = true;
+            gridColumn8.VisibleIndex = 0;
+            gridColumn8.Width = 90;
+            // 
+            // gridColumn9
+            // 
+            gridColumn9.Caption = "Student ID";
+            gridColumn9.FieldName = "Student_Id";
+            gridColumn9.Name = "gridColumn9";
+            gridColumn9.Visible = true;
+            gridColumn9.VisibleIndex = 1;
+            gridColumn9.Width = 187;
+            // 
+            // gridColumn10
+            // 
+            gridColumn10.Caption = "FirstName";
+            gridColumn10.FieldName = "Firstname";
+            gridColumn10.Name = "gridColumn10";
+            gridColumn10.Visible = true;
+            gridColumn10.VisibleIndex = 2;
+            gridColumn10.Width = 163;
+            // 
+            // gridColumn11
+            // 
+            gridColumn11.Caption = "LastName";
+            gridColumn11.FieldName = "Lastname";
+            gridColumn11.Name = "gridColumn11";
+            gridColumn11.Visible = true;
+            gridColumn11.VisibleIndex = 3;
+            gridColumn11.Width = 140;
+            // 
+            // gridColumn12
+            // 
+            gridColumn12.Caption = "Section";
+            gridColumn12.FieldName = "Section";
+            gridColumn12.Name = "gridColumn12";
+            gridColumn12.Visible = true;
+            gridColumn12.VisibleIndex = 4;
+            gridColumn12.Width = 126;
+            // 
+            // gridColumn13
+            // 
+            gridColumn13.Caption = "Date";
+            gridColumn13.Name = "gridColumn13";
+            gridColumn13.Visible = true;
+            gridColumn13.VisibleIndex = 5;
             // 
             // MainViewDashboard
             // 
-            MainViewDashboard.Dock = System.Windows.Forms.DockStyle.Fill;
-            MainViewDashboard.Location = new System.Drawing.Point(3, 17);
+            MainViewDashboard.Dock = System.Windows.Forms.DockStyle.Bottom;
+            MainViewDashboard.Location = new System.Drawing.Point(12, 12);
             MainViewDashboard.MainView = gvDashboard;
             MainViewDashboard.Name = "MainViewDashboard";
-            MainViewDashboard.Size = new System.Drawing.Size(864, 341);
-            MainViewDashboard.TabIndex = 6;
+            MainViewDashboard.Size = new System.Drawing.Size(846, 369);
+            MainViewDashboard.TabIndex = 10;
             MainViewDashboard.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gvDashboard, gridView1 });
             // 
             // gvDashboard
@@ -140,35 +213,34 @@
             gridView1.GridControl = MainViewDashboard;
             gridView1.Name = "gridView1";
             // 
-            // groupBox1
+            // layoutControlItem1
             // 
-            groupBox1.Controls.Add(MainViewDashboard);
-            groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            groupBox1.Location = new System.Drawing.Point(0, 0);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new System.Drawing.Size(870, 361);
-            groupBox1.TabIndex = 7;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "STUDENT LIST";
+            layoutControlItem1.Control = MainViewDashboard;
+            layoutControlItem1.Location = new System.Drawing.Point(0, 0);
+            layoutControlItem1.Name = "layoutControlItem1";
+            layoutControlItem1.Size = new System.Drawing.Size(850, 373);
+            layoutControlItem1.TextVisible = false;
             // 
             // AdminDashboardUC
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            Controls.Add(panelGrid);
+            Controls.Add(layoutControl1);
             Name = "AdminDashboardUC";
             Size = new System.Drawing.Size(870, 629);
-            panelGrid.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)layoutControl1).EndInit();
+            layoutControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)Root).EndInit();
             ((System.ComponentModel.ISupportInitialize)MainViewDashboard).EndInit();
             ((System.ComponentModel.ISupportInitialize)gvDashboard).EndInit();
             ((System.ComponentModel.ISupportInitialize)gridView1).EndInit();
-            groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)layoutControlItem1).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
-
-        private System.Windows.Forms.Panel panelGrid;
+        private DevExpress.XtraLayout.LayoutControl layoutControl1;
+        private DevExpress.XtraLayout.LayoutControlGroup Root;
         private DevExpress.XtraGrid.GridControl MainViewDashboard;
         private DevExpress.XtraGrid.Views.Grid.GridView gvDashboard;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn1;
@@ -179,6 +251,12 @@
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn6;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn7;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem1;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn8;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn9;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn10;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn11;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn12;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn13;
     }
 }
