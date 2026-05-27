@@ -14,7 +14,10 @@ namespace Task_Management_System.Data
 
         public SqliteConnection GetConnection()
         {
-            return new SqliteConnection(connectionString);
+
+            var con = new SqliteConnection(connectionString);
+            con.Open();
+            return con;
         }
     }
 }

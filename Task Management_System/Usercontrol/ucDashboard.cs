@@ -4,6 +4,8 @@ using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Task_Management_System.Data;
@@ -12,7 +14,7 @@ namespace Task_Management_System.Usercontrol
 {
     public partial class AdminDashboardUC : XtraUserControl
     {
-        DataBase db = new DataBase();
+        private readonly DataBase db = new DataBase();
 
         public AdminDashboardUC()
         {
@@ -23,23 +25,41 @@ namespace Task_Management_System.Usercontrol
         // LOAD DATABASE TO GRID
         public void LoadData()
         {
-            using (SqliteConnection con = db.GetConnection())
+            try
             {
-                string query = "SELECT * FROM Admin";
-                var result = con.Query(query).ToList();
-                DataTable dt = new DataTable();
-                if (result.Count > 0)
+                using (SqliteConnection con = db.GetConnection())
                 {
-                    var first = (IDictionary<string, object>)result[0];
-                    foreach (var key in first.Keys)
-                        dt.Columns.Add(key);
-                    foreach (var row in result)
+                    string query = "SELECT * FROM Admin";
+                    var result = con.Query(query).ToList();
+                    DataTable dt = new DataTable();
+
+                    if (result.Count > 0)
                     {
-                        var dict = (IDictionary<string, object>)row;
-                        dt.Rows.Add(dict.Values.ToArray());
+                        var first = (IDictionary<string, object>)result[0];
+
+                        // ✔ Set picture column as byte[]
+                        foreach (var key in first.Keys)
+                        {
+                            if (key == "picture")
+                                dt.Columns.Add(key, typeof(byte[]));
+                            else
+                                dt.Columns.Add(key);
+                        }
+
+                        // ✔ Fill rows
+                        foreach (var row in result)
+                        {
+                            var dict = (IDictionary<string, object>)row;
+                            dt.Rows.Add(dict.Values.ToArray());
+                        }
                     }
+
+                    MainViewDashboard.DataSource = dt;
                 }
-                MainViewDashboard.DataSource = dt;
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show("Load error: " + ex.Message);
             }
         }
     }
