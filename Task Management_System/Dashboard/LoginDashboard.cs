@@ -46,49 +46,62 @@ namespace Task_Management_System.Dashboard
                     con.Open();
 
                     // =================================================================
-                    // PIPELINE 1: Check standard user accounts table (e.g., Admin level)
+                    // 🎯 FIXED PIPELINE: Check the correct 'Users' table instead of 'User'
                     // =================================================================
-                    string adminQuery = @"SELECT * FROM User 
+                    string loginQuery = @"SELECT * FROM Users 
                                           WHERE Username = @Username 
                                           AND Password = @Password";
 
-                    using (SqliteCommand adminCommand = new SqliteCommand(adminQuery, con))
+                    using (SqliteCommand loginCommand = new SqliteCommand(loginQuery, con))
                     {
-                        adminCommand.Parameters.AddWithValue("@Username", username);
-                        adminCommand.Parameters.AddWithValue("@Password", password);
+                        loginCommand.Parameters.AddWithValue("@Username", username);
+                        loginCommand.Parameters.AddWithValue("@Password", password);
 
-                        using (SqliteDataReader adminReader = adminCommand.ExecuteReader())
+                        using (SqliteDataReader loginReader = loginCommand.ExecuteReader())
                         {
-                            if (adminReader.Read())
+                            if (loginReader.Read())
                             {
-                                UserSession.CurrentUserRole = "Admin";
-                                UserSession.CurrentStudentId = "STU-2026-0001"; // Administrative fallback ID
+                                // Route to the appropriate dashboard based on whether they are an Admin or Student
+                                if (username.ToLower() == "admin")
+                                {
+                                    UserSession.CurrentUserRole = "Admin";
+                                    UserSession.CurrentStudentId = "STU-2026-0001"; // Administrative fallback ID
 
-                                XtraMessageBox.Show("Login Successful! Welcome to the Admin panel.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    XtraMessageBox.Show("Login Successful! Welcome to the Admin panel.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                                AdminDashboard adminDashboard = new AdminDashboard(username);
-                                adminDashboard.Show();
-                                this.Hide();
+                                    AdminDashboard adminDashboard = new AdminDashboard(username);
+                                    adminDashboard.Show();
+                                    this.Hide();
+                                }
+                                else
+                                {
+                                    UserSession.CurrentUserRole = "Student";
+                                    UserSession.CurrentStudentId = username;
+
+                                    XtraMessageBox.Show($"Login Successful! Welcome Student {username}.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                                    StudentDashboard studentDashboard = new StudentDashboard();
+                                    studentDashboard.Show();
+                                    this.Hide();
+                                }
                                 return;
                             }
                         }
                     }
 
-                    // =================================================================
-                    // PIPELINE 2: Check student profiles table (Student level)
-                    // =================================================================
-                    string studentQuery = @"SELECT * FROM StudentProfile 
-                                            WHERE StudentId = @StudentId 
-                                            AND PasswordHash = @Password";
+                    // Fallback to check the 'Students' table directly in case passwords match PasswordHash directly
+                    string studentFallbackQuery = @"SELECT * FROM Students 
+                                                    WHERE StudentId = @StudentId 
+                                                    AND PasswordHash = @Password";
 
-                    using (SqliteCommand studentCommand = new SqliteCommand(studentQuery, con))
+                    using (SqliteCommand fallbackCommand = new SqliteCommand(studentFallbackQuery, con))
                     {
-                        studentCommand.Parameters.AddWithValue("@StudentId", username);
-                        studentCommand.Parameters.AddWithValue("@Password", password);
+                        fallbackCommand.Parameters.AddWithValue("@StudentId", username);
+                        fallbackCommand.Parameters.AddWithValue("@Password", password);
 
-                        using (SqliteDataReader studentReader = studentCommand.ExecuteReader())
+                        using (SqliteDataReader fallbackReader = fallbackCommand.ExecuteReader())
                         {
-                            if (studentReader.Read())
+                            if (fallbackReader.Read())
                             {
                                 UserSession.CurrentUserRole = "Student";
                                 UserSession.CurrentStudentId = username;
