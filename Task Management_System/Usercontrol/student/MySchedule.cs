@@ -42,7 +42,7 @@ namespace Task_Management_System.Usercontrol.student
                     // Asynchronously fetch raw data entities via Dapper ORM layer
                     var appointments = await db.QueryAsync<DbAppointment>("SELECT * FROM Appointments;");
 
-                    // FIX: Freeze layout updates on the Scheduler Control itself rather than Storage
+                    // Freeze layout updates on the Scheduler Control itself rather than Storage for execution smoothness
                     schedulerControl1.BeginUpdate();
                     schedulerDataStorage1.Appointments.Items.Clear();
 
@@ -50,7 +50,7 @@ namespace Task_Management_System.Usercontrol.student
                     {
                         Appointment apt = schedulerDataStorage1.CreateAppointment(AppointmentType.Normal);
 
-                        // FIX: Use SetAppointmentId to safely inject custom identifiers into read-only property fields
+                        // Use SetAppointmentId to safely inject custom identifiers into read-only property fields
                         schedulerDataStorage1.SetAppointmentId(apt, entity.UniqueId);
 
                         apt.Subject = entity.Subject;
@@ -72,7 +72,7 @@ namespace Task_Management_System.Usercontrol.student
             }
             finally
             {
-                // FIX: Release visual layout processing freeze safely inside the finally loop
+                // Release visual layout processing freeze safely inside the finally block
                 schedulerControl1.EndUpdate();
             }
         }
