@@ -12,7 +12,7 @@ namespace Task_Management_System.Dashboard
         private StudentDashboardOverview _overviewControl;
         private MySchedule _scheduleControl;
         private TaskScheduler _taskSchedulerControl;
-        private MyProfile _profileControl;
+        private Profile _profileControl;
 
         public StudentDashboard()
         {
@@ -78,7 +78,7 @@ namespace Task_Management_System.Dashboard
             }
             else if (targetingElement == accordionControlElementProfile)
             {
-                if (_profileControl == null) _profileControl = new MyProfile();
+                if (_profileControl == null) _profileControl = new Profile();
                 targetedViewControl = _profileControl;
             }
 
