@@ -55,39 +55,45 @@
             // MainViewDashboard
             // 
             MainViewDashboard.Dock = System.Windows.Forms.DockStyle.Bottom;
-            MainViewDashboard.Location = new System.Drawing.Point(0, 213);
+            MainViewDashboard.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
+            MainViewDashboard.Location = new System.Drawing.Point(0, 409);
             MainViewDashboard.MainView = gvDashboard;
+            MainViewDashboard.Margin = new System.Windows.Forms.Padding(6);
             MainViewDashboard.Name = "MainViewDashboard";
             MainViewDashboard.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { repositoryItemPictureEdit1 });
-            MainViewDashboard.Size = new System.Drawing.Size(900, 357);
+            MainViewDashboard.Size = new System.Drawing.Size(1800, 687);
             MainViewDashboard.TabIndex = 10;
             MainViewDashboard.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gvDashboard, gridView1 });
             // 
             // gvDashboard
             // 
             gvDashboard.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { gridColumn1, gridColumn2, gridColumn3, gridColumn4, gridColumn5, gridColumn6, gridColumn7 });
+            gvDashboard.DetailHeight = 673;
             gvDashboard.GridControl = MainViewDashboard;
             gvDashboard.Name = "gvDashboard";
+            gvDashboard.OptionsEditForm.PopupEditFormWidth = 1600;
             gvDashboard.OptionsView.ShowFooter = true;
-            gvDashboard.RowHeight = 100;
+            gvDashboard.RowHeight = 192;
             // 
             // gridColumn1
             // 
             gridColumn1.FieldName = "Id";
+            gridColumn1.MinWidth = 40;
             gridColumn1.Name = "gridColumn1";
             gridColumn1.Visible = true;
             gridColumn1.VisibleIndex = 0;
-            gridColumn1.Width = 47;
+            gridColumn1.Width = 94;
             // 
             // gridColumn2
             // 
             gridColumn2.Caption = "Photo";
             gridColumn2.ColumnEdit = repositoryItemPictureEdit1;
             gridColumn2.FieldName = "picture";
+            gridColumn2.MinWidth = 40;
             gridColumn2.Name = "gridColumn2";
             gridColumn2.Visible = true;
             gridColumn2.VisibleIndex = 1;
-            gridColumn2.Width = 130;
+            gridColumn2.Width = 260;
             // 
             // repositoryItemPictureEdit1
             // 
@@ -98,57 +104,65 @@
             // 
             gridColumn3.Caption = "Student ID";
             gridColumn3.FieldName = "Student_Id";
+            gridColumn3.MinWidth = 40;
             gridColumn3.Name = "gridColumn3";
             gridColumn3.Visible = true;
             gridColumn3.VisibleIndex = 2;
-            gridColumn3.Width = 123;
+            gridColumn3.Width = 246;
             // 
             // gridColumn4
             // 
             gridColumn4.Caption = "Firstname";
             gridColumn4.FieldName = "FirstName";
+            gridColumn4.MinWidth = 40;
             gridColumn4.Name = "gridColumn4";
             gridColumn4.Visible = true;
             gridColumn4.VisibleIndex = 3;
-            gridColumn4.Width = 126;
+            gridColumn4.Width = 252;
             // 
             // gridColumn5
             // 
             gridColumn5.Caption = "Lastname";
             gridColumn5.FieldName = "LastName";
+            gridColumn5.MinWidth = 40;
             gridColumn5.Name = "gridColumn5";
             gridColumn5.Visible = true;
             gridColumn5.VisibleIndex = 4;
-            gridColumn5.Width = 136;
+            gridColumn5.Width = 272;
             // 
             // gridColumn6
             // 
             gridColumn6.Caption = "Section";
             gridColumn6.FieldName = "Section";
+            gridColumn6.MinWidth = 40;
             gridColumn6.Name = "gridColumn6";
             gridColumn6.Visible = true;
             gridColumn6.VisibleIndex = 5;
-            gridColumn6.Width = 136;
+            gridColumn6.Width = 272;
             // 
             // gridColumn7
             // 
             gridColumn7.Caption = "Date";
             gridColumn7.FieldName = "Date";
+            gridColumn7.MinWidth = 40;
             gridColumn7.Name = "gridColumn7";
             gridColumn7.Visible = true;
             gridColumn7.VisibleIndex = 6;
-            gridColumn7.Width = 177;
+            gridColumn7.Width = 354;
             // 
             // gridView1
             // 
+            gridView1.DetailHeight = 673;
             gridView1.GridControl = MainViewDashboard;
             gridView1.Name = "gridView1";
+            gridView1.OptionsEditForm.PopupEditFormWidth = 1600;
             // 
             // btnRegister
             // 
-            btnRegister.Location = new System.Drawing.Point(431, 173);
+            btnRegister.Location = new System.Drawing.Point(862, 334);
+            btnRegister.Margin = new System.Windows.Forms.Padding(6);
             btnRegister.Name = "btnRegister";
-            btnRegister.Size = new System.Drawing.Size(122, 34);
+            btnRegister.Size = new System.Drawing.Size(244, 65);
             btnRegister.TabIndex = 8;
             btnRegister.Text = "Register";
             btnRegister.Click += btnRegister_Click;
@@ -156,39 +170,44 @@
             // PicBox
             // 
             PicBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            PicBox.Location = new System.Drawing.Point(688, 46);
+            PicBox.Location = new System.Drawing.Point(1376, 120);
+            PicBox.Margin = new System.Windows.Forms.Padding(6);
             PicBox.Name = "PicBox";
             tableLayoutPanel1.SetRowSpan(PicBox, 2);
-            PicBox.Size = new System.Drawing.Size(120, 78);
+            PicBox.Size = new System.Drawing.Size(238, 148);
             PicBox.TabIndex = 6;
             PicBox.TabStop = false;
             // 
             // txtBLastname
             // 
-            txtBLastname.Location = new System.Drawing.Point(171, 130);
+            txtBLastname.Location = new System.Drawing.Point(342, 284);
+            txtBLastname.Margin = new System.Windows.Forms.Padding(6);
             txtBLastname.Name = "txtBLastname";
-            txtBLastname.Size = new System.Drawing.Size(202, 20);
+            txtBLastname.Size = new System.Drawing.Size(404, 40);
             txtBLastname.TabIndex = 3;
             // 
             // txtBFirstName
             // 
-            txtBFirstName.Location = new System.Drawing.Point(171, 87);
+            txtBFirstName.Location = new System.Drawing.Point(342, 204);
+            txtBFirstName.Margin = new System.Windows.Forms.Padding(6);
             txtBFirstName.Name = "txtBFirstName";
-            txtBFirstName.Size = new System.Drawing.Size(202, 20);
+            txtBFirstName.Size = new System.Drawing.Size(404, 40);
             txtBFirstName.TabIndex = 2;
             // 
             // txtBStudentId
             // 
-            txtBStudentId.Location = new System.Drawing.Point(171, 46);
+            txtBStudentId.Location = new System.Drawing.Point(342, 120);
+            txtBStudentId.Margin = new System.Windows.Forms.Padding(6);
             txtBStudentId.Name = "txtBStudentId";
-            txtBStudentId.Size = new System.Drawing.Size(202, 20);
+            txtBStudentId.Size = new System.Drawing.Size(404, 40);
             txtBStudentId.TabIndex = 1;
             // 
             // btnUpload
             // 
-            btnUpload.Location = new System.Drawing.Point(688, 173);
+            btnUpload.Location = new System.Drawing.Point(1376, 334);
+            btnUpload.Margin = new System.Windows.Forms.Padding(6);
             btnUpload.Name = "btnUpload";
-            btnUpload.Size = new System.Drawing.Size(115, 34);
+            btnUpload.Size = new System.Drawing.Size(230, 65);
             btnUpload.TabIndex = 7;
             btnUpload.Text = "Upload Photo";
             btnUpload.Click += btnUpload_Click;
@@ -196,13 +215,14 @@
             // Date
             // 
             Date.EditValue = new System.DateTime(2026, 5, 27, 0, 0, 0, 0);
-            Date.Location = new System.Drawing.Point(431, 87);
+            Date.Location = new System.Drawing.Point(862, 204);
+            Date.Margin = new System.Windows.Forms.Padding(6);
             Date.Name = "Date";
             Date.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
             Date.Properties.DisplayFormat.FormatString = "yyyy-MM-dd";
             Date.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
             Date.Properties.Name = "Date";
-            Date.Size = new System.Drawing.Size(201, 20);
+            Date.Size = new System.Drawing.Size(402, 40);
             Date.TabIndex = 9;
             // 
             // tableLayoutPanel1
@@ -231,40 +251,44 @@
             tableLayoutPanel1.Controls.Add(PicBox, 5, 1);
             tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
             tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(6);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 5;
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 27.6029053F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20.3389835F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 19.37046F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.1065378F));
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 19.1964283F));
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20.0892849F));
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            tableLayoutPanel1.Size = new System.Drawing.Size(900, 215);
+            tableLayoutPanel1.Size = new System.Drawing.Size(1800, 413);
             tableLayoutPanel1.TabIndex = 11;
             tableLayoutPanel1.Paint += tableLayoutPanel1_Paint;
             // 
             // cbSection
             // 
             cbSection.FormattingEnabled = true;
-            cbSection.Location = new System.Drawing.Point(431, 46);
+            cbSection.Location = new System.Drawing.Point(862, 120);
+            cbSection.Margin = new System.Windows.Forms.Padding(6);
             cbSection.Name = "cbSection";
-            cbSection.Size = new System.Drawing.Size(201, 21);
+            cbSection.Size = new System.Drawing.Size(398, 33);
             cbSection.TabIndex = 12;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(100, 43);
+            label1.Location = new System.Drawing.Point(200, 114);
+            label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(63, 13);
+            label1.Size = new System.Drawing.Size(121, 25);
             label1.TabIndex = 10;
             label1.Text = "Student ID:";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(100, 84);
+            label2.Location = new System.Drawing.Point(200, 198);
+            label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(58, 13);
+            label2.Size = new System.Drawing.Size(111, 25);
             label2.TabIndex = 11;
             label2.Text = "Firstname:";
             label2.Click += label2_Click;
@@ -272,27 +296,30 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(100, 127);
+            label3.Location = new System.Drawing.Point(200, 278);
+            label3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(53, 13);
+            label3.Size = new System.Drawing.Size(101, 25);
             label3.TabIndex = 12;
             label3.Text = "Lastname";
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new System.Drawing.Point(379, 43);
+            label4.Location = new System.Drawing.Point(758, 114);
+            label4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             label4.Name = "label4";
-            label4.Size = new System.Drawing.Size(42, 13);
+            label4.Size = new System.Drawing.Size(80, 25);
             label4.TabIndex = 13;
             label4.Text = "Section";
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new System.Drawing.Point(379, 84);
+            label5.Location = new System.Drawing.Point(758, 198);
+            label5.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             label5.Name = "label5";
-            label5.Size = new System.Drawing.Size(34, 13);
+            label5.Size = new System.Drawing.Size(62, 25);
             label5.TabIndex = 14;
             label5.Text = "Date:";
             label5.Click += label5_Click;
@@ -300,20 +327,22 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new System.Drawing.Point(688, 127);
+            label6.Location = new System.Drawing.Point(1376, 278);
+            label6.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             label6.Name = "label6";
-            label6.Size = new System.Drawing.Size(95, 26);
+            label6.Size = new System.Drawing.Size(235, 25);
             label6.TabIndex = 15;
             label6.Text = "Insert your image here:";
             // 
             // RegisterDashboardUC
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             Controls.Add(tableLayoutPanel1);
             Controls.Add(MainViewDashboard);
+            Margin = new System.Windows.Forms.Padding(6);
             Name = "RegisterDashboardUC";
-            Size = new System.Drawing.Size(900, 570);
+            Size = new System.Drawing.Size(1800, 1096);
             ((System.ComponentModel.ISupportInitialize)MainViewDashboard).EndInit();
             ((System.ComponentModel.ISupportInitialize)gvDashboard).EndInit();
             ((System.ComponentModel.ISupportInitialize)repositoryItemPictureEdit1).EndInit();

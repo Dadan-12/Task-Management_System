@@ -9,11 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Task_Management_System.Usercontrol
+namespace Task_Management_System.Usercontrol.student
 {
-    public partial class StudentDashboardUC : DevExpress.XtraEditors.XtraUserControl
+    public partial class StudentDashboardOverview : DevExpress.XtraEditors.XtraUserControl
     {
-        public StudentDashboardUC()
+        public StudentDashboardOverview()
         {
             InitializeComponent();
         }
