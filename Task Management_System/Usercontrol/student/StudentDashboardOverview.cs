@@ -22,6 +22,8 @@ namespace Task_Management_System.Usercontrol.student
         {
             InitializeComponent();
             SetupDashboardSchedulerOptions();
+
+            // Wire up asynchronous load event tracking
             this.Load += async (s, e) => await InitializeDashboardDataAsync();
         }
 
@@ -54,6 +56,14 @@ namespace Task_Management_System.Usercontrol.student
         {
             schedulerMini.Start = DateTime.Today;
 
+            // Update greeting label dynamically based on time of day context
+            int currentHour = DateTime.Now.Hour;
+            string greeting = "Good Evening";
+            if (currentHour < 12) greeting = "Good Morning";
+            else if (currentHour < 17) greeting = "Good Afternoon";
+
+            lblWelcome.Text = $"{greeting}, Student!";
+
             // Reconfigure labels matching data index configurations
             schedulerDataStorage1.Appointments.Labels.Clear();
             schedulerDataStorage1.Appointments.Labels.CreateNewLabel(0, "None", "&None", System.Drawing.SystemColors.Window);
@@ -65,61 +75,106 @@ namespace Task_Management_System.Usercontrol.student
             await RefreshKPIWidgetsAndLoadSchedulerAsync();
         }
 
-        public async Task RefreshKPIWidgetsAndLoadSchedulerAsync()
+        /// <summary>
+        /// Public-facing execution routine to programmatically force a background refresh from external view interactions
+        /// </summary>
+        public async Task RefreshDashboardDataAsync()
+        {
+            await RefreshKPIWidgetsAndLoadSchedulerAsync();
+        }
+
+        private async Task RefreshKPIWidgetsAndLoadSchedulerAsync()
         {
             try
             {
-                using (var db = DatabaseContext.CreateConnection())
+                string currentDayStr = DateTime.Today.ToString("yyyy-MM-dd");
+                string nowStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+                // ⚡ PERFORMANCE OPTIMIZATION: Fire all matrix requests in parallel to eliminate sequential pipeline latency.
+                // 🎯 FIXED: Assigned a localized unique connection mapping statement to each Task pipeline. 
+                // This shields thread execution states from throwing shared SQLite handle lock exceptions.
+                var todayClassesTask = Task.Run(() =>
                 {
-                    string currentDayStr = DateTime.Today.ToString("yyyy-MM-dd");
-                    string nowStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-
-                    // Query 1: Classes Today (LabelKey = 1)
-                    int todayClassesCount = await db.ExecuteScalarAsync<int>(
-                        "SELECT COUNT(1) FROM Appointments WHERE LabelKey = 1 AND strftime('%Y-%m-%d', StartTime) = @Today;",
-                        new { Today = currentDayStr });
-
-                    // Query 2: Pending Tasks (LabelKey = 3 [Assignment] or 4 [Project])
-                    int pendingTasksCount = await db.ExecuteScalarAsync<int>(
-                        "SELECT COUNT(1) FROM Appointments WHERE LabelKey IN (3, 4);");
-
-                    // Query 3: Upcoming Events (StartTime > Now)
-                    int upcomingEventsCount = await db.ExecuteScalarAsync<int>(
-                        "SELECT COUNT(1) FROM Appointments WHERE StartTime > @Now;",
-                        new { Now = nowStr });
-
-                    // Query 4: Load active records out into the list 
-                    var appointments = await db.QueryAsync<LocalAppointment>("SELECT * FROM Appointments;");
-
-                    if (this.IsHandleCreated)
+                    using (var db = DatabaseContext.CreateConnection())
                     {
-                        this.Invoke(new Action(() =>
-                        {
-                            // Update counter widgets text values
-                            lblTodayCount.Text = todayClassesCount.ToString();
-                            lblPendingCount.Text = pendingTasksCount.ToString();
-                            lblUpcomingCount.Text = upcomingEventsCount.ToString();
-
-                            schedulerMini.BeginUpdate();
-                            try
-                            {
-                                dashboardAppointmentsList.Clear();
-                                foreach (var entity in appointments)
-                                {
-                                    dashboardAppointmentsList.Add(entity);
-                                }
-                            }
-                            finally
-                            {
-                                schedulerMini.EndUpdate();
-                            }
-                        }));
+                        return db.ExecuteScalar<int>(
+                            "SELECT COUNT(1) FROM Appointments WHERE LabelKey = 1 AND strftime('%Y-%m-%d', StartTime) = @Today;",
+                            new { Today = currentDayStr });
                     }
+                });
+
+                var pendingTasksTask = Task.Run(() =>
+                {
+                    using (var db = DatabaseContext.CreateConnection())
+                    {
+                        return db.ExecuteScalar<int>("SELECT COUNT(1) FROM Appointments WHERE LabelKey IN (3, 4);");
+                    }
+                });
+
+                var upcomingEventsTask = Task.Run(() =>
+                {
+                    using (var db = DatabaseContext.CreateConnection())
+                    {
+                        return db.ExecuteScalar<int>(
+                            "SELECT COUNT(1) FROM Appointments WHERE StartTime > @Now;",
+                            new { Now = nowStr });
+                    }
+                });
+
+                var loadAppointmentsTask = Task.Run(() =>
+                {
+                    using (var db = DatabaseContext.CreateConnection())
+                    {
+                        return db.Query<LocalAppointment>("SELECT * FROM Appointments;").ToList();
+                    }
+                });
+
+                // Await the completion of all data pulls simultaneously safely
+                await Task.WhenAll(todayClassesTask, pendingTasksTask, upcomingEventsTask, loadAppointmentsTask);
+
+                int todayClassesCount = await todayClassesTask;
+                int pendingTasksCount = await pendingTasksTask;
+                int upcomingEventsCount = await upcomingEventsTask;
+                var appointments = await loadAppointmentsTask;
+
+                // Isolated delegation method to securely write parameters to the UI component controls
+                Action updateUiDelegation = () =>
+                {
+                    // Safely map values into counter card elements
+                    lblTodayCount.Text = todayClassesCount.ToString();
+                    lblPendingCount.Text = pendingTasksCount.ToString();
+                    lblUpcomingCount.Text = upcomingEventsCount.ToString();
+
+                    // Populate the mini calendar component layout
+                    schedulerMini.BeginUpdate();
+                    try
+                    {
+                        dashboardAppointmentsList.Clear();
+                        foreach (var entity in appointments)
+                        {
+                            dashboardAppointmentsList.Add(entity);
+                        }
+                    }
+                    finally
+                    {
+                        schedulerMini.EndUpdate();
+                    }
+                };
+
+                // 🛠️ FIX: Avoid silent dropping of data via strict InvokeRequired pattern matching
+                if (this.InvokeRequired)
+                {
+                    this.Invoke(updateUiDelegation);
+                }
+                else
+                {
+                    updateUiDelegation();
                 }
             }
             catch (Exception ex)
             {
-                XtraMessageBox.Show(this, $"Error executing async dashboard refresh pipeline layout: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XtraMessageBox.Show(this, $"Error executing async dashboard refresh pipeline layout: {ex.Message}",
+                    "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

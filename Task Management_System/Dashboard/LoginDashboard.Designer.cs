@@ -59,7 +59,7 @@
             lblPasswordHeader = new DevExpress.XtraEditors.LabelControl();
             lblUsernameHeader = new DevExpress.XtraEditors.LabelControl();
             btnLogin = new DevExpress.XtraEditors.SimpleButton();
-            btnCancel = new DevExpress.XtraEditors.SimpleButton(); // 🔴 ADDED: Cancel button initialization
+            btnCancel = new DevExpress.XtraEditors.SimpleButton();
             txtPassword = new DevExpress.XtraEditors.TextEdit();
             txtStudentId = new DevExpress.XtraEditors.TextEdit();
             lblLoginSubheader = new DevExpress.XtraEditors.LabelControl();
@@ -146,7 +146,7 @@
             panelControlRightLogin.Controls.Add(lblPasswordHeader);
             panelControlRightLogin.Controls.Add(lblUsernameHeader);
             panelControlRightLogin.Controls.Add(btnLogin);
-            panelControlRightLogin.Controls.Add(btnCancel); // 🔴 ADDED: Adding the cancel button to the right panel layout container
+            panelControlRightLogin.Controls.Add(btnCancel);
             panelControlRightLogin.Controls.Add(txtPassword);
             panelControlRightLogin.Controls.Add(txtStudentId);
             panelControlRightLogin.Controls.Add(lblLoginSubheader);
@@ -213,7 +213,7 @@
             btnLogin.Location = new System.Drawing.Point(136, 612);
             btnLogin.Margin = new System.Windows.Forms.Padding(5);
             btnLogin.Name = "btnLogin";
-            btnLogin.Size = new System.Drawing.Size(330, 75); // 🔄 MODIFIED: Left room for Cancel button by cutting width from 686 to 330
+            btnLogin.Size = new System.Drawing.Size(330, 75);
             btnLogin.TabIndex = 4;
             btnLogin.Text = "Sign In";
             btnLogin.Click += btnLogin_Click;
@@ -221,20 +221,20 @@
             // btnCancel
             // 
             btnCancel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            btnCancel.Appearance.BackColor = System.Drawing.Color.FromArgb(240, 70, 70); // Red palette styling
+            btnCancel.Appearance.BackColor = System.Drawing.Color.FromArgb(240, 70, 70);
             btnCancel.Appearance.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
             btnCancel.Appearance.ForeColor = System.Drawing.Color.White;
             btnCancel.Appearance.Options.UseBackColor = true;
             btnCancel.Appearance.Options.UseFont = true;
             btnCancel.Appearance.Options.UseForeColor = true;
             btnCancel.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.HotFlat;
-            btnCancel.Location = new System.Drawing.Point(492, 612); // 🔴 ADDED: Positioned seamlessly alongside btnLogin
+            btnCancel.Location = new System.Drawing.Point(492, 612);
             btnCancel.Margin = new System.Windows.Forms.Padding(5);
             btnCancel.Name = "btnCancel";
-            btnCancel.Size = new System.Drawing.Size(330, 75); // Balanced dimensions with btnLogin
+            btnCancel.Size = new System.Drawing.Size(330, 75);
             btnCancel.TabIndex = 8;
             btnCancel.Text = "Cancel";
-            btnCancel.Click += btnCancel_Click; // Event handler hook
+            btnCancel.Click += btnCancel_Click;
             // 
             // txtPassword
             // 

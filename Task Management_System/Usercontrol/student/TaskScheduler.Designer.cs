@@ -41,7 +41,7 @@
             schedulerControl1.Location = new System.Drawing.Point(0, 60);
             schedulerControl1.Name = "schedulerControl1";
             schedulerControl1.Size = new System.Drawing.Size(1693, 1096);
-            schedulerControl1.Start = new System.DateTime(2026, 5, 24, 0, 0, 0, 0);
+            schedulerControl1.Start = System.DateTime.Today;
             schedulerControl1.TabIndex = 1;
             schedulerControl1.Views.DayView.TimeRulers.Add(timeRuler1);
             schedulerControl1.Views.FullWeekView.Enabled = true;
@@ -51,9 +51,6 @@
             schedulerControl1.Views.YearView.UseOptimizedScrolling = false;
             // 
             // schedulerDataStorage1
-            // 
-            // 
-            // 
             // 
             schedulerDataStorage1.AppointmentDependencies.AutoReload = false;
             // 
@@ -95,8 +92,10 @@
             // 
             // TaskScheduler
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            // Fixed base canvas layout configuration metrics safely
+            this.Appearance.Options.UseFont = true;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             Controls.Add(schedulerControl1);
             Controls.Add(panelControlTopActions);
             Name = "TaskScheduler";

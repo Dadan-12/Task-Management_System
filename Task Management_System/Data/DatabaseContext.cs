@@ -11,8 +11,8 @@ namespace Task_Management_System.Data
         private static readonly string DbFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
         private static readonly string DbPath = Path.Combine(DbFolder, "DB_TaskManagement.db");
 
-        // Fast shared connection string with WAL mode built-in directly to handle multi-tab queries smoothly
-        public static readonly string ConnectionString = $"Data Source={DbPath};Journal Mode=Wal;Synchronous=Normal;Cache=Shared;";
+        // 🎯 FIXED: Optimized connection flags to support stable connection pooling across multiple worker threads
+        public static readonly string ConnectionString = $"Data Source={DbPath};Cache=Shared;Pooling=True;";
 
         /// <summary>
         /// Instantiates a clean, opened, thread-safe connection to the SQLite database.
@@ -26,6 +26,14 @@ namespace Task_Management_System.Data
 
             var connection = new SqliteConnection(ConnectionString);
             connection.Open();
+
+            // ⚡ PERFORMANCE INJECTION: Execute WAL engine optimizations cleanly via PRAGMA commands to avoid cross-tab lockouts
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = "PRAGMA journal_mode=WAL; PRAGMA synchronous=NORMAL;";
+                command.ExecuteNonQuery();
+            }
+
             return connection;
         }
 
@@ -62,6 +70,20 @@ namespace Task_Management_System.Data
                         PasswordHash TEXT,
                         ProfileImageBlob BLOB
                     );");
+
+                // 🔄 LIVE AUTOMATIC SCHEMA MIGRATION FILTER
+                // Ensures older variations on development machines seamlessly add updated column properties
+                try
+                {
+                    connection.Execute("ALTER TABLE StudentProfile ADD COLUMN ProfileImageBlob BLOB;");
+                }
+                catch (SqliteException) { /* Column already exists safely */ }
+
+                try
+                {
+                    connection.Execute("ALTER TABLE StudentProfile ADD COLUMN PasswordHash TEXT;");
+                }
+                catch (SqliteException) { /* Column already exists safely */ }
 
                 // 3. Dashboard Announcements Table (Powers Home overview stream)
                 connection.Execute(@"

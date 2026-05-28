@@ -59,9 +59,6 @@ namespace Task_Management_System.Usercontrol.student
             schedulerDataStorage1.AppointmentsInserted += SchedulerDataStorage1_AppointmentsSaveOrUpdate;
             schedulerDataStorage1.AppointmentsChanged += SchedulerDataStorage1_AppointmentsSaveOrUpdate;
             schedulerDataStorage1.AppointmentsDeleted += SchedulerDataStorage1_AppointmentsDeleted;
-
-            // 🔄 OPTIMIZED LIFECYCLE: Removed duplicate anonymous 'this.Load' event registration here 
-            // to rely entirely on OnHandleCreated for safer WinForms panel-swapping management.
         }
 
         private void InitializeSchedulerDefaults()
@@ -210,9 +207,45 @@ namespace Task_Management_System.Usercontrol.student
             }
         }
 
+        /// <summary>
+        /// Launches the custom uc_AddTaskAllocation control inside a tidy dialog wrapper window.
+        /// </summary>
+        private async void OpenCustomAllocationForm(Task_Management_System.Models.DbAppointment existingAppointment = null)
+        {
+            using (XtraForm formContainer = new XtraForm())
+            {
+                var customAllocationUC = new uc_AddTaskAllocation();
+
+                // If an appointment parameter is passed, inject it into edit mode lifecycle
+                if (existingAppointment != null)
+                {
+                    customAllocationUC.LoadAppointmentData(existingAppointment);
+                }
+
+                formContainer.Text = existingAppointment == null ? "Create New Allocation" : "Modify Task Allocation";
+                formContainer.FormBorderStyle = FormBorderStyle.FixedDialog;
+                formContainer.MaximizeBox = false;
+                formContainer.MinimizeBox = false;
+                formContainer.StartPosition = FormStartPosition.CenterParent;
+                formContainer.ClientSize = customAllocationUC.Size;
+
+                customAllocationUC.Dock = DockStyle.Fill;
+                formContainer.Controls.Add(customAllocationUC);
+
+                // Blocks active UI code thread execution path until user cancels or saves the entity
+                formContainer.ShowDialog(this);
+
+                // If modifications occurred inside the modal boundary contexts, pull updates from SQLite
+                if (customAllocationUC.ResultAppointment != null)
+                {
+                    await LoadSchedulerDataAsync();
+                }
+            }
+        }
+
         private void BtnAddNewTask_Click(object sender, EventArgs e)
         {
-            schedulerControl1.CreateNewAppointment();
+            OpenCustomAllocationForm();
         }
 
         private void RadioGroupViewSwitcher_SelectedIndexChanged(object sender, EventArgs e)
@@ -232,12 +265,21 @@ namespace Task_Management_System.Usercontrol.student
         private void SchedulerControl1_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
             e.Menu.Items.Clear();
-            e.Menu.Items.Add(new DXMenuItem("➕ Add New Task", (s, ev) => schedulerControl1.CreateNewAppointment()));
+            e.Menu.Items.Add(new DXMenuItem("➕ Add New Task", (s, ev) => OpenCustomAllocationForm()));
 
             if (schedulerControl1.SelectedAppointments.Count > 0)
             {
                 var targetedAppointment = schedulerControl1.SelectedAppointments[0];
-                e.Menu.Items.Add(new DXMenuItem("✏️ Edit Appointment", (s, ev) => schedulerControl1.ShowEditAppointmentForm(targetedAppointment, false)));
+
+                e.Menu.Items.Add(new DXMenuItem("✏️ Edit Appointment", (s, ev) =>
+                {
+                    // Clean structural unpacking extraction routine targeting the data-source reference object mapping row
+                    if (targetedAppointment.GetRow(schedulerDataStorage1) is Task_Management_System.Models.DbAppointment boundModelItem)
+                    {
+                        OpenCustomAllocationForm(boundModelItem);
+                    }
+                }));
+
                 e.Menu.Items.Add(new DXMenuItem("🗑 Delete Appointment", (s, ev) => DeleteAppointmentWithConfirmation()));
             }
         }
