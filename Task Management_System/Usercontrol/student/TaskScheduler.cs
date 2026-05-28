@@ -1,52 +1,226 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows.Forms;
+using System.Threading.Tasks;
+using System.Linq;
+using Dapper;
 using DevExpress.Utils.Menu;
 using DevExpress.XtraEditors;
 using DevExpress.XtraScheduler;
+using Task_Management_System.Data;
 
 namespace Task_Management_System.Usercontrol.student
 {
     public partial class TaskScheduler : DevExpress.XtraEditors.XtraUserControl
     {
+        // 🎯 TARGETED: Direct internal data binding targeted cleanly to DbAppointment structures
+        private BindingList<Task_Management_System.Models.DbAppointment> schedulerAppointmentsList = new BindingList<Task_Management_System.Models.DbAppointment>();
+
+        // 🛡️ STATE TRACKER: Tracks if data is currently initializing from the database.
+        // This prevents the scheduler from treating initial loads as new user-created tasks.
+        private bool isDataLoading = false;
+
         public TaskScheduler()
         {
             InitializeComponent();
+            SetupSchedulerConfigurations();
             RegisterEventHandlers();
             InitializeSchedulerDefaults();
         }
 
-        /// <summary>
-        /// Centralizes runtime component event registrations.
-        /// </summary>
+        private void SetupSchedulerConfigurations()
+        {
+            AppointmentMappingInfo mappings = schedulerDataStorage1.Appointments.Mappings;
+
+            // Property mappings cleanly pointing to DbAppointment structure fields
+            mappings.AppointmentId = nameof(Task_Management_System.Models.DbAppointment.UniqueId);
+            mappings.Subject = nameof(Task_Management_System.Models.DbAppointment.Subject);
+            mappings.Description = nameof(Task_Management_System.Models.DbAppointment.Description);
+            mappings.Start = nameof(Task_Management_System.Models.DbAppointment.StartTime);
+            mappings.End = nameof(Task_Management_System.Models.DbAppointment.EndTime);
+            mappings.Label = nameof(Task_Management_System.Models.DbAppointment.LabelKey);
+            mappings.Status = nameof(Task_Management_System.Models.DbAppointment.StatusKey);
+            mappings.AllDay = nameof(Task_Management_System.Models.DbAppointment.AllDay);
+            mappings.Location = nameof(Task_Management_System.Models.DbAppointment.Location);
+
+            // 🎯 FIXED ERROR: Explicitly empty out the ReminderInfo mapping.
+            // This prevents DevExpress from searching for missing properties and resolves SQLite saving crashes.
+            mappings.ReminderInfo = "";
+
+            schedulerDataStorage1.Appointments.DataSource = schedulerAppointmentsList;
+        }
+
         private void RegisterEventHandlers()
         {
             btnAddNewTask.Click += BtnAddNewTask_Click;
-            tabControl1.SelectedIndexChanged += TabControl1_SelectedIndexChanged;
             schedulerControl1.PopupMenuShowing += SchedulerControl1_PopupMenuShowing;
+            radioGroupViewSwitcher.SelectedIndexChanged += RadioGroupViewSwitcher_SelectedIndexChanged;
+
+            schedulerDataStorage1.AppointmentsInserted += SchedulerDataStorage1_AppointmentsSaveOrUpdate;
+            schedulerDataStorage1.AppointmentsChanged += SchedulerDataStorage1_AppointmentsSaveOrUpdate;
+            schedulerDataStorage1.AppointmentsDeleted += SchedulerDataStorage1_AppointmentsDeleted;
+
+            // 🔄 OPTIMIZED LIFECYCLE: Removed duplicate anonymous 'this.Load' event registration here 
+            // to rely entirely on OnHandleCreated for safer WinForms panel-swapping management.
         }
 
-        /// <summary>
-        /// Applies runtime-specific configuration defaults to the scheduler instance.
-        /// </summary>
         private void InitializeSchedulerDefaults()
         {
-            // Dynamically target the user's current calendar day at execution time
             schedulerControl1.Start = DateTime.Today;
         }
 
-        // ====================== EVENT HANDLERS ======================
+        protected override async void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            if (schedulerAppointmentsList.Count == 0)
+            {
+                await LoadSchedulerDataAsync();
+            }
+        }
+
+        public async Task LoadSchedulerDataAsync()
+        {
+            if (isDataLoading) return;
+
+            try
+            {
+                // Set flag to true to lock save/update triggers while pulling records
+                isDataLoading = true;
+
+                using (var db = DatabaseContext.CreateConnection())
+                {
+                    // Unified Dapper mapper retrieval engine pulling from the common table
+                    var appointments = await db.QueryAsync<Task_Management_System.Models.DbAppointment>("SELECT * FROM Appointments;");
+
+                    if (this.IsHandleCreated)
+                    {
+                        this.Invoke(new Action(() =>
+                        {
+                            schedulerControl1.BeginUpdate();
+                            try
+                            {
+                                schedulerAppointmentsList.Clear();
+                                foreach (var entity in appointments)
+                                {
+                                    schedulerAppointmentsList.Add(entity);
+                                }
+                            }
+                            finally
+                            {
+                                schedulerControl1.EndUpdate();
+                            }
+                        }));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show(this, $"Failed loading synchronized data records: {ex.Message}",
+                    "Database Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                // Always unlock loading flag state upon routine completion
+                isDataLoading = false;
+            }
+        }
+
+        private async void SchedulerDataStorage1_AppointmentsSaveOrUpdate(object sender, PersistentObjectsEventArgs e)
+        {
+            // 🛡️ INTERCEPT LOADS: Abort database insertion if changes are triggered by data loading routines
+            if (isDataLoading) return;
+
+            try
+            {
+                using (var db = DatabaseContext.CreateConnection())
+                {
+                    foreach (Appointment apt in e.Objects)
+                    {
+                        string targetId;
+
+                        if (apt.Id == null || string.IsNullOrEmpty(apt.Id.ToString()))
+                        {
+                            targetId = Guid.NewGuid().ToString();
+                            schedulerDataStorage1.SetAppointmentId(apt, targetId);
+                        }
+                        else
+                        {
+                            targetId = apt.Id.ToString();
+                        }
+
+                        // Explicit construction utilizing unified DbAppointment namespace structure
+                        var model = new Task_Management_System.Models.DbAppointment
+                        {
+                            UniqueId = targetId,
+                            Subject = apt.Subject ?? "Untitled Task",
+                            Description = apt.Description ?? "",
+                            StartTime = apt.Start.ToString("yyyy-MM-dd HH:mm:ss"),
+                            EndTime = apt.End.ToString("yyyy-MM-dd HH:mm:ss"),
+                            LabelKey = Convert.ToInt32(apt.LabelKey),
+                            StatusKey = Convert.ToInt32(apt.StatusKey),
+                            AllDay = apt.AllDay,
+                            Location = apt.Location ?? "",
+                            ReminderInfo = ""
+                        };
+
+                        string sql = @"
+                            INSERT INTO Appointments (UniqueId, Subject, Description, StartTime, EndTime, LabelKey, StatusKey, AllDay, Location, ReminderInfo)
+                            VALUES (@UniqueId, @Subject, @Description, @StartTime, @EndTime, @LabelKey, @StatusKey, @AllDay, @Location, @ReminderInfo)
+                            ON CONFLICT(UniqueId) DO UPDATE SET
+                                Subject = @Subject,
+                                Description = @Description,
+                                StartTime = @StartTime,
+                                EndTime = @EndTime,
+                                LabelKey = @LabelKey,
+                                StatusKey = @StatusKey,
+                                AllDay = @AllDay,
+                                Location = @Location,
+                                ReminderInfo = @ReminderInfo;";
+
+                        await db.ExecuteAsync(sql, model);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show(this, $"Error saving changes to database: {ex.Message}", "Save Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private async void SchedulerDataStorage1_AppointmentsDeleted(object sender, PersistentObjectsEventArgs e)
+        {
+            if (isDataLoading) return;
+
+            try
+            {
+                using (var db = DatabaseContext.CreateConnection())
+                {
+                    foreach (Appointment apt in e.Objects)
+                    {
+                        if (apt.Id != null)
+                        {
+                            await db.ExecuteAsync("DELETE FROM Appointments WHERE UniqueId = @UniqueId;", new { UniqueId = apt.Id.ToString() });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show(this, $"Error deleting records from database: {ex.Message}", "Deletion Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
         private void BtnAddNewTask_Click(object sender, EventArgs e)
         {
             schedulerControl1.CreateNewAppointment();
         }
 
-        private void TabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        private void RadioGroupViewSwitcher_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedTab == null) return;
+            string selectedView = radioGroupViewSwitcher.EditValue?.ToString();
+            if (string.IsNullOrEmpty(selectedView)) return;
 
-            // Senior Refactor: Replaced procedural switch-case block with an expressive pattern switch expression
-            schedulerControl1.ActiveViewType = tabControl1.SelectedTab.Text switch
+            schedulerControl1.ActiveViewType = selectedView switch
             {
                 "Daily" => SchedulerViewType.Day,
                 "Weekly" => SchedulerViewType.Week,
@@ -57,36 +231,21 @@ namespace Task_Management_System.Usercontrol.student
 
         private void SchedulerControl1_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            // Clear default context-menu items to render custom student actions
             e.Menu.Items.Clear();
+            e.Menu.Items.Add(new DXMenuItem("➕ Add New Task", (s, ev) => schedulerControl1.CreateNewAppointment()));
 
-            // Action: Add New Task
-            e.Menu.Items.Add(new DXMenuItem("➕ Add New Task",
-                (s, ev) => schedulerControl1.CreateNewAppointment()));
-
-            // Action contexts targeting pre-existing appointments
             if (schedulerControl1.SelectedAppointments.Count > 0)
             {
                 var targetedAppointment = schedulerControl1.SelectedAppointments[0];
-
-                // Action: Edit Appointment
-                e.Menu.Items.Add(new DXMenuItem("✏️ Edit Appointment",
-                    (s, ev) => schedulerControl1.ShowEditAppointmentForm(targetedAppointment, false)));
-
-                // Action: Delete Appointment
-                e.Menu.Items.Add(new DXMenuItem("🗑 Delete Appointment",
-                    (s, ev) => DeleteAppointmentWithConfirmation()));
+                e.Menu.Items.Add(new DXMenuItem("✏️ Edit Appointment", (s, ev) => schedulerControl1.ShowEditAppointmentForm(targetedAppointment, false)));
+                e.Menu.Items.Add(new DXMenuItem("🗑 Delete Appointment", (s, ev) => DeleteAppointmentWithConfirmation()));
             }
         }
 
-        /// <summary>
-        /// Prompts user confirmation within the DevExpress ecosystem prior to data mutation.
-        /// </summary>
         private void DeleteAppointmentWithConfirmation()
         {
             if (schedulerControl1.SelectedAppointments.Count == 0) return;
 
-            // Senior Refactor: Standardized native win32 layouts into XtraMessageBox to ensure skin unity
             var promptResult = XtraMessageBox.Show(
                 this,
                 "Are you sure you want to permanently delete this appointment?",

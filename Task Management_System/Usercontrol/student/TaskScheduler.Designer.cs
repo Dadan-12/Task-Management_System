@@ -4,10 +4,6 @@
     {
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -21,116 +17,104 @@
 
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-
-            var timeRuler1 = new DevExpress.XtraScheduler.TimeRuler();
-            var timeRuler2 = new DevExpress.XtraScheduler.TimeRuler();
-            var timeRuler3 = new DevExpress.XtraScheduler.TimeRuler();
-
-            this.schedulerControl1 = new DevExpress.XtraScheduler.SchedulerControl();
-            this.schedulerDataStorage1 = new DevExpress.XtraScheduler.SchedulerDataStorage(this.components);
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.btnAddNewTask = new System.Windows.Forms.Button();
-
-            ((System.ComponentModel.ISupportInitialize)(this.schedulerControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.schedulerDataStorage1)).BeginInit();
-            this.SuspendLayout();
-
-            // 
-            // btnAddNewTask
-            // 
-            this.btnAddNewTask.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnAddNewTask.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
-            this.btnAddNewTask.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.btnAddNewTask.Location = new System.Drawing.Point(0, 0);
-            this.btnAddNewTask.Name = "btnAddNewTask";
-            this.btnAddNewTask.Size = new System.Drawing.Size(1693, 40);
-            this.btnAddNewTask.TabIndex = 0;
-            this.btnAddNewTask.Text = "➕ Add New Task / Schedule";
-            this.btnAddNewTask.UseVisualStyleBackColor = true;
-
-            // 
-            // tabControl1
-            // 
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tabControl1.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.tabControl1.Location = new System.Drawing.Point(0, 40);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1693, 40);
-            this.tabControl1.TabIndex = 1;
-            this.tabControl1.TabPages.Add("Daily", "Daily");
-            this.tabControl1.TabPages.Add("Weekly", "Weekly");
-            this.tabControl1.TabPages.Add("Monthly", "Monthly");
-
+            components = new System.ComponentModel.Container();
+            DevExpress.XtraScheduler.TimeRuler timeRuler1 = new DevExpress.XtraScheduler.TimeRuler();
+            DevExpress.XtraScheduler.TimeRuler timeRuler2 = new DevExpress.XtraScheduler.TimeRuler();
+            DevExpress.XtraScheduler.TimeRuler timeRuler3 = new DevExpress.XtraScheduler.TimeRuler();
+            schedulerControl1 = new DevExpress.XtraScheduler.SchedulerControl();
+            schedulerDataStorage1 = new DevExpress.XtraScheduler.SchedulerDataStorage(components);
+            panelControlTopActions = new DevExpress.XtraEditors.PanelControl();
+            radioGroupViewSwitcher = new DevExpress.XtraEditors.RadioGroup();
+            btnAddNewTask = new DevExpress.XtraEditors.SimpleButton();
+            ((System.ComponentModel.ISupportInitialize)schedulerControl1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)schedulerDataStorage1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)panelControlTopActions).BeginInit();
+            panelControlTopActions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)radioGroupViewSwitcher.Properties).BeginInit();
+            SuspendLayout();
             // 
             // schedulerControl1
             // 
-            this.schedulerControl1.DataStorage = this.schedulerDataStorage1;
-            this.schedulerControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.schedulerControl1.Location = new System.Drawing.Point(0, 80);
-            this.schedulerControl1.Name = "schedulerControl1";
-            this.schedulerControl1.Size = new System.Drawing.Size(1693, 1076);
-            this.schedulerControl1.TabIndex = 2;
-
+            schedulerControl1.ActiveViewType = DevExpress.XtraScheduler.SchedulerViewType.Month;
+            schedulerControl1.DataStorage = schedulerDataStorage1;
+            schedulerControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            schedulerControl1.Location = new System.Drawing.Point(0, 60);
+            schedulerControl1.Name = "schedulerControl1";
+            schedulerControl1.Size = new System.Drawing.Size(1693, 1096);
+            schedulerControl1.Start = new System.DateTime(2026, 5, 24, 0, 0, 0, 0);
+            schedulerControl1.TabIndex = 1;
+            schedulerControl1.Views.DayView.TimeRulers.Add(timeRuler1);
+            schedulerControl1.Views.FullWeekView.Enabled = true;
+            schedulerControl1.Views.FullWeekView.TimeRulers.Add(timeRuler2);
+            schedulerControl1.Views.WorkWeekView.TimeRulers.Add(timeRuler3);
+            schedulerControl1.Views.YearView.Enabled = false;
+            schedulerControl1.Views.YearView.UseOptimizedScrolling = false;
             // 
-            // Views Configuration
+            // schedulerDataStorage1
             // 
-            this.schedulerControl1.Views.DayView.Enabled = true;
-            this.schedulerControl1.Views.DayView.TimeRulers.Add(timeRuler1);
-            this.schedulerControl1.Views.WeekView.Enabled = true;
-            this.schedulerControl1.Views.FullWeekView.Enabled = true;
-            this.schedulerControl1.Views.FullWeekView.TimeRulers.Add(timeRuler2);
-            this.schedulerControl1.Views.MonthView.Enabled = true;
-            this.schedulerControl1.Views.WorkWeekView.Enabled = true;
-            this.schedulerControl1.Views.WorkWeekView.TimeRulers.Add(timeRuler3);
-            this.schedulerControl1.Views.YearView.Enabled = false;
-            this.schedulerControl1.ActiveViewType = DevExpress.XtraScheduler.SchedulerViewType.Month;
-
             // 
-            // OptionsCustomization
             // 
-            this.schedulerControl1.OptionsCustomization.AllowAppointmentCreate = DevExpress.XtraScheduler.UsedAppointmentType.All;
-            this.schedulerControl1.OptionsCustomization.AllowAppointmentEdit = DevExpress.XtraScheduler.UsedAppointmentType.All;
-            this.schedulerControl1.OptionsCustomization.AllowAppointmentDelete = DevExpress.XtraScheduler.UsedAppointmentType.All;
-
             // 
-            // schedulerDataStorage1 Labels Schema
+            schedulerDataStorage1.AppointmentDependencies.AutoReload = false;
             // 
-            this.schedulerDataStorage1.AppointmentDependencies.AutoReload = false;
-            this.schedulerDataStorage1.Appointments.Labels.Clear();
-            this.schedulerDataStorage1.Appointments.Labels.CreateNewLabel(0, "None", "&None", System.Drawing.SystemColors.Window);
-            this.schedulerDataStorage1.Appointments.Labels.CreateNewLabel(1, "Class", "&Class", System.Drawing.Color.FromArgb(168, 213, 255));
-            this.schedulerDataStorage1.Appointments.Labels.CreateNewLabel(2, "Exam", "&Exam", System.Drawing.Color.FromArgb(255, 194, 190));
-            this.schedulerDataStorage1.Appointments.Labels.CreateNewLabel(3, "Assignment", "&Assignment", System.Drawing.Color.FromArgb(193, 244, 156));
-            this.schedulerDataStorage1.Appointments.Labels.CreateNewLabel(4, "Project", "&Project", System.Drawing.Color.FromArgb(244, 206, 147));
-            this.schedulerDataStorage1.Appointments.Labels.CreateNewLabel(5, "Meeting", "&Meeting", System.Drawing.Color.FromArgb(207, 219, 152));
-            this.schedulerDataStorage1.Appointments.Labels.CreateNewLabel(6, "Personal", "&Personal", System.Drawing.Color.FromArgb(224, 207, 233));
-
+            // panelControlTopActions
             // 
-            // TaskScheduler Layout Composition
+            panelControlTopActions.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            panelControlTopActions.Controls.Add(radioGroupViewSwitcher);
+            panelControlTopActions.Controls.Add(btnAddNewTask);
+            panelControlTopActions.Dock = System.Windows.Forms.DockStyle.Top;
+            panelControlTopActions.Location = new System.Drawing.Point(0, 0);
+            panelControlTopActions.Name = "panelControlTopActions";
+            panelControlTopActions.Padding = new System.Windows.Forms.Padding(10);
+            panelControlTopActions.Size = new System.Drawing.Size(1693, 60);
+            panelControlTopActions.TabIndex = 0;
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-
-            // Reordered strictly back-to-front by stack order for proper Z-Index docking behavior
-            this.Controls.Add(this.schedulerControl1);
-            this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.btnAddNewTask);
-
-            this.Name = "TaskScheduler";
-            this.Size = new System.Drawing.Size(1693, 1156);
-
-            ((System.ComponentModel.ISupportInitialize)(this.schedulerControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.schedulerDataStorage1)).EndInit();
-            this.ResumeLayout(false);
+            // radioGroupViewSwitcher
+            // 
+            radioGroupViewSwitcher.Dock = System.Windows.Forms.DockStyle.Right;
+            radioGroupViewSwitcher.EditValue = "Monthly";
+            radioGroupViewSwitcher.Location = new System.Drawing.Point(1086, 10);
+            radioGroupViewSwitcher.Name = "radioGroupViewSwitcher";
+            radioGroupViewSwitcher.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 10F);
+            radioGroupViewSwitcher.Properties.Appearance.Options.UseFont = true;
+            radioGroupViewSwitcher.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            radioGroupViewSwitcher.Properties.Items.AddRange(new DevExpress.XtraEditors.Controls.RadioGroupItem[] { new DevExpress.XtraEditors.Controls.RadioGroupItem("Daily", "Day View"), new DevExpress.XtraEditors.Controls.RadioGroupItem("Weekly", "Week View"), new DevExpress.XtraEditors.Controls.RadioGroupItem("Monthly", "Month View") });
+            radioGroupViewSwitcher.Size = new System.Drawing.Size(597, 40);
+            radioGroupViewSwitcher.TabIndex = 1;
+            // 
+            // btnAddNewTask
+            // 
+            btnAddNewTask.Appearance.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            btnAddNewTask.Appearance.Options.UseFont = true;
+            btnAddNewTask.Dock = System.Windows.Forms.DockStyle.Left;
+            btnAddNewTask.Location = new System.Drawing.Point(10, 10);
+            btnAddNewTask.Name = "btnAddNewTask";
+            btnAddNewTask.Size = new System.Drawing.Size(393, 40);
+            btnAddNewTask.TabIndex = 0;
+            btnAddNewTask.Text = "➕  Add New Task Allocation";
+            // 
+            // TaskScheduler
+            // 
+            AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            Controls.Add(schedulerControl1);
+            Controls.Add(panelControlTopActions);
+            Name = "TaskScheduler";
+            Size = new System.Drawing.Size(1693, 1156);
+            ((System.ComponentModel.ISupportInitialize)schedulerControl1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)schedulerDataStorage1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)panelControlTopActions).EndInit();
+            panelControlTopActions.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)radioGroupViewSwitcher.Properties).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion
 
         private DevExpress.XtraScheduler.SchedulerControl schedulerControl1;
         private DevExpress.XtraScheduler.SchedulerDataStorage schedulerDataStorage1;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.Button btnAddNewTask;
+        private DevExpress.XtraEditors.PanelControl panelControlTopActions;
+        private DevExpress.XtraEditors.SimpleButton btnAddNewTask;
+        private DevExpress.XtraEditors.RadioGroup radioGroupViewSwitcher;
     }
 }

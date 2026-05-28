@@ -17,92 +17,101 @@
 
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             DevExpress.XtraScheduler.TimeRuler timeRuler1 = new DevExpress.XtraScheduler.TimeRuler();
             DevExpress.XtraScheduler.TimeRuler timeRuler2 = new DevExpress.XtraScheduler.TimeRuler();
             DevExpress.XtraScheduler.TimeRuler timeRuler3 = new DevExpress.XtraScheduler.TimeRuler();
-            this.schedulerControl1 = new DevExpress.XtraScheduler.SchedulerControl();
-            this.schedulerDataStorage1 = new DevExpress.XtraScheduler.SchedulerDataStorage(this.components);
-            this.xtraTabControl1 = new DevExpress.XtraTab.XtraTabControl();
-            this.xtraTabPageDaily = new DevExpress.XtraTab.XtraTabPage();
-            this.xtraTabPageWeekly = new DevExpress.XtraTab.XtraTabPage();
-            this.xtraTabPageMonthly = new DevExpress.XtraTab.XtraTabPage();
-
-            ((System.ComponentModel.ISupportInitialize)(this.schedulerControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.schedulerDataStorage1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.xtraTabControl1)).BeginInit();
-            this.xtraTabControl1.SuspendLayout();
-            this.SuspendLayout();
-
-            // ====================================================================
-            // xtraTabControl1 (Pure DevExpress Tab Element Layer)
-            // ====================================================================
-            this.xtraTabControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.xtraTabControl1.Location = new System.Drawing.Point(0, 0);
-            this.xtraTabControl1.Name = "xtraTabControl1";
-            this.xtraTabControl1.SelectedTabPage = this.xtraTabPageMonthly;
-            this.xtraTabControl1.Size = new System.Drawing.Size(2224, 45);
-            this.xtraTabControl1.TabIndex = 1;
-            this.xtraTabControl1.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
-            this.xtraTabPageDaily,
-            this.xtraTabPageWeekly,
-            this.xtraTabPageMonthly});
-
-            // xtraTabPageDaily
-            this.xtraTabPageDaily.Name = "xtraTabPageDaily";
-            this.xtraTabPageDaily.Size = new System.Drawing.Size(2220, 0);
-            this.xtraTabPageDaily.Text = "Daily";
-
-            // xtraTabPageWeekly
-            this.xtraTabPageWeekly.Name = "xtraTabPageWeekly";
-            this.xtraTabPageWeekly.Size = new System.Drawing.Size(2220, 0);
-            this.xtraTabPageWeekly.Text = "Weekly";
-
+            schedulerControl1 = new DevExpress.XtraScheduler.SchedulerControl();
+            schedulerDataStorage1 = new DevExpress.XtraScheduler.SchedulerDataStorage(components);
+            xtraTabControl1 = new DevExpress.XtraTab.XtraTabControl();
+            xtraTabPageMonthly = new DevExpress.XtraTab.XtraTabPage();
+            xtraTabPageDaily = new DevExpress.XtraTab.XtraTabPage();
+            xtraTabPageWeekly = new DevExpress.XtraTab.XtraTabPage();
+            ((System.ComponentModel.ISupportInitialize)schedulerControl1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)schedulerDataStorage1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)xtraTabControl1).BeginInit();
+            xtraTabControl1.SuspendLayout();
+            SuspendLayout();
+            // 
+            // schedulerControl1
+            // 
+            schedulerControl1.ActiveViewType = DevExpress.XtraScheduler.SchedulerViewType.Month;
+            schedulerControl1.DataStorage = schedulerDataStorage1;
+            schedulerControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            schedulerControl1.Location = new System.Drawing.Point(0, 45);
+            schedulerControl1.Name = "schedulerControl1";
+            schedulerControl1.Size = new System.Drawing.Size(2224, 1094);
+            schedulerControl1.Start = new System.DateTime(2026, 5, 24, 0, 0, 0, 0);
+            schedulerControl1.TabIndex = 0;
+            schedulerControl1.Views.DayView.TimeRulers.Add(timeRuler1);
+            schedulerControl1.Views.FullWeekView.Enabled = true;
+            schedulerControl1.Views.FullWeekView.TimeRulers.Add(timeRuler2);
+            schedulerControl1.Views.WorkWeekView.TimeRulers.Add(timeRuler3);
+            schedulerControl1.Views.YearView.Enabled = false;
+            schedulerControl1.Views.YearView.UseOptimizedScrolling = false;
+            // 
+            // schedulerDataStorage1
+            // 
+            // 
+            // 
+            // 
+            schedulerDataStorage1.AppointmentDependencies.AutoReload = false;
+            // 
+            // 
+            // 
+            schedulerDataStorage1.Appointments.Labels.CreateNewLabel(0, "None", "&None", System.Drawing.SystemColors.Window);
+            schedulerDataStorage1.Appointments.Labels.CreateNewLabel(1, "Important", "&Important", System.Drawing.Color.FromArgb(255, 194, 190));
+            schedulerDataStorage1.Appointments.Labels.CreateNewLabel(2, "Business", "&Business", System.Drawing.Color.FromArgb(168, 213, 255));
+            schedulerDataStorage1.Appointments.Labels.CreateNewLabel(3, "Personal", "&Personal", System.Drawing.Color.FromArgb(193, 244, 156));
+            schedulerDataStorage1.Appointments.Labels.CreateNewLabel(4, "Vacation", "&Vacation", System.Drawing.Color.FromArgb(243, 228, 199));
+            schedulerDataStorage1.Appointments.Labels.CreateNewLabel(5, "Must Attend", "Must &Attend", System.Drawing.Color.FromArgb(244, 206, 147));
+            schedulerDataStorage1.Appointments.Labels.CreateNewLabel(6, "Travel Required", "&Travel Required", System.Drawing.Color.FromArgb(199, 244, 255));
+            schedulerDataStorage1.Appointments.Labels.CreateNewLabel(7, "Needs Preparation", "&Needs Preparation", System.Drawing.Color.FromArgb(207, 219, 152));
+            schedulerDataStorage1.Appointments.Labels.CreateNewLabel(8, "Birthday", "&Birthday", System.Drawing.Color.FromArgb(224, 207, 233));
+            schedulerDataStorage1.Appointments.Labels.CreateNewLabel(9, "Anniversary", "&Anniversary", System.Drawing.Color.FromArgb(141, 233, 223));
+            schedulerDataStorage1.Appointments.Labels.CreateNewLabel(10, "Phone Call", "Phone &Call", System.Drawing.Color.FromArgb(255, 247, 165));
+            // 
+            // xtraTabControl1
+            // 
+            xtraTabControl1.Dock = System.Windows.Forms.DockStyle.Top;
+            xtraTabControl1.Location = new System.Drawing.Point(0, 0);
+            xtraTabControl1.Name = "xtraTabControl1";
+            xtraTabControl1.SelectedTabPage = xtraTabPageMonthly;
+            xtraTabControl1.Size = new System.Drawing.Size(2224, 45);
+            xtraTabControl1.TabIndex = 1;
+            xtraTabControl1.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] { xtraTabPageDaily, xtraTabPageWeekly, xtraTabPageMonthly });
+            // 
             // xtraTabPageMonthly
-            this.xtraTabPageMonthly.Name = "xtraTabPageMonthly";
-            this.xtraTabPageMonthly.Size = new System.Drawing.Size(2220, 0);
-            this.xtraTabPageMonthly.Text = "Monthly";
-
-            // ====================================================================
-            // schedulerControl1 (Pure DevExpress Scheduler View Canvas)
-            // ====================================================================
-            this.schedulerControl1.ActiveViewType = DevExpress.XtraScheduler.SchedulerViewType.Month;
-            this.schedulerControl1.DataStorage = this.schedulerDataStorage1;
-            this.schedulerControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.schedulerControl1.Location = new System.Drawing.Point(0, 45);
-            this.schedulerControl1.Name = "schedulerControl1";
-            this.schedulerControl1.Size = new System.Drawing.Size(2224, 1094);
-            this.schedulerControl1.Start = new System.DateTime(2026, 5, 24, 0, 0, 0, 0);
-            this.schedulerControl1.TabIndex = 0;
-
-            // View and layout rulers configurations
-            this.schedulerControl1.Views.DayView.TimeRulers.Add(timeRuler1);
-            this.schedulerControl1.Views.FullWeekView.Enabled = true;
-            this.schedulerControl1.Views.FullWeekView.TimeRulers.Add(timeRuler2);
-            this.schedulerControl1.Views.WorkWeekView.TimeRulers.Add(timeRuler3);
-            this.schedulerControl1.Views.YearView.Enabled = false;
-            this.schedulerControl1.Views.YearView.UseOptimizedScrolling = false;
-
-            // ====================================================================
-            // schedulerDataStorage1 Data Mapping Engine
-            // ====================================================================
-            this.schedulerDataStorage1.AppointmentDependencies.AutoReload = false;
-
-            // ====================================================================
-            // MySchedule Custom Container Composition Setup
-            // ====================================================================
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.schedulerControl1);
-            this.Controls.Add(this.xtraTabControl1);
-            this.Name = "MySchedule";
-            this.Size = new System.Drawing.Size(2224, 1139);
-
-            ((System.ComponentModel.ISupportInitialize)(this.schedulerControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.schedulerDataStorage1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.xtraTabControl1)).EndInit();
-            this.xtraTabControl1.ResumeLayout(false);
-            this.ResumeLayout(false);
+            // 
+            xtraTabPageMonthly.Name = "xtraTabPageMonthly";
+            xtraTabPageMonthly.Size = new System.Drawing.Size(2220, 0);
+            xtraTabPageMonthly.Text = "Monthly";
+            // 
+            // xtraTabPageDaily
+            // 
+            xtraTabPageDaily.Name = "xtraTabPageDaily";
+            xtraTabPageDaily.Size = new System.Drawing.Size(2220, 0);
+            xtraTabPageDaily.Text = "Daily";
+            // 
+            // xtraTabPageWeekly
+            // 
+            xtraTabPageWeekly.Name = "xtraTabPageWeekly";
+            xtraTabPageWeekly.Size = new System.Drawing.Size(2220, 0);
+            xtraTabPageWeekly.Text = "Weekly";
+            // 
+            // MySchedule
+            // 
+            AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            Controls.Add(schedulerControl1);
+            Controls.Add(xtraTabControl1);
+            Name = "MySchedule";
+            Size = new System.Drawing.Size(2224, 1139);
+            ((System.ComponentModel.ISupportInitialize)schedulerControl1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)schedulerDataStorage1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)xtraTabControl1).EndInit();
+            xtraTabControl1.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion

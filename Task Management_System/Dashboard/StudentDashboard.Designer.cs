@@ -19,17 +19,28 @@ namespace Task_Management_System.Dashboard
         {
             accordionControl1 = new AccordionControl();
             accordionControlElementDashboard = new AccordionControlElement();
-            accordionControlElementSubjects = new AccordionControlElement();
             accordionControlElementSchedule = new AccordionControlElement();
             accordionControlElementTasks = new AccordionControlElement();
             accordionControlElementProfile = new AccordionControlElement();
+            accordionControlElementLogout = new AccordionControlElement(); // Added for navigation integration
+            mainContentContainer = new DevExpress.XtraEditors.PanelControl();
+
             ((System.ComponentModel.ISupportInitialize)accordionControl1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)mainContentContainer).BeginInit();
+            mainContentContainer.SuspendLayout();
             SuspendLayout();
             // 
             // accordionControl1
             // 
             accordionControl1.Dock = System.Windows.Forms.DockStyle.Left;
-            accordionControl1.Elements.AddRange(new AccordionControlElement[] { accordionControlElementDashboard, accordionControlElementSubjects, accordionControlElementSchedule, accordionControlElementTasks, accordionControlElementProfile });
+            // Included the new logout item at the bottom of the list array collection
+            accordionControl1.Elements.AddRange(new AccordionControlElement[] {
+                accordionControlElementDashboard,
+                accordionControlElementSchedule,
+                accordionControlElementTasks,
+                accordionControlElementProfile,
+                accordionControlElementLogout
+            });
             accordionControl1.Location = new System.Drawing.Point(0, 0);
             accordionControl1.Margin = new System.Windows.Forms.Padding(4);
             accordionControl1.Name = "accordionControl1";
@@ -43,12 +54,6 @@ namespace Task_Management_System.Dashboard
             accordionControlElementDashboard.Style = ElementStyle.Item;
             accordionControlElementDashboard.Text = "Dashboard";
             // 
-            // accordionControlElementSubjects
-            // 
-            accordionControlElementSubjects.Name = "accordionControlElementSubjects";
-            accordionControlElementSubjects.Style = ElementStyle.Item;
-            accordionControlElementSubjects.Text = "My Subjects";
-            // 
             // accordionControlElementSchedule
             // 
             accordionControlElementSchedule.Name = "accordionControlElementSchedule";
@@ -59,7 +64,7 @@ namespace Task_Management_System.Dashboard
             // 
             accordionControlElementTasks.Name = "accordionControlElementTasks";
             accordionControlElementTasks.Style = ElementStyle.Item;
-            accordionControlElementTasks.Text = "My Tasks";
+            accordionControlElementTasks.Text = "Task Scheduler";
             // 
             // accordionControlElementProfile
             // 
@@ -67,16 +72,40 @@ namespace Task_Management_System.Dashboard
             accordionControlElementProfile.Style = ElementStyle.Item;
             accordionControlElementProfile.Text = "Profile";
             // 
+            // accordionControlElementLogout
+            // 
+            accordionControlElementLogout.Name = "accordionControlElementLogout";
+            accordionControlElementLogout.Style = ElementStyle.Item;
+            accordionControlElementLogout.Text = "Logout";
+            // 
+            // mainContentContainer
+            // 
+            mainContentContainer.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            mainContentContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            mainContentContainer.Location = new System.Drawing.Point(390, 0);
+            mainContentContainer.Margin = new System.Windows.Forms.Padding(4);
+            mainContentContainer.Name = "mainContentContainer";
+            mainContentContainer.Size = new System.Drawing.Size(1725, 1268);
+            mainContentContainer.TabIndex = 26;
+            // 
             // StudentDashboard
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(2115, 1268);
+            Controls.Add(mainContentContainer);
             Controls.Add(accordionControl1);
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             Margin = new System.Windows.Forms.Padding(4);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "StudentDashboard";
-            Text = "Student Dashboard";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            Text = "Student Workspace Dashboard";
+            WindowState = System.Windows.Forms.FormWindowState.Maximized;
             ((System.ComponentModel.ISupportInitialize)accordionControl1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)mainContentContainer).EndInit();
+            mainContentContainer.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -84,9 +113,10 @@ namespace Task_Management_System.Dashboard
 
         private DevExpress.XtraBars.Navigation.AccordionControl accordionControl1;
         private DevExpress.XtraBars.Navigation.AccordionControlElement accordionControlElementDashboard;
-        private DevExpress.XtraBars.Navigation.AccordionControlElement accordionControlElementSubjects;
         private DevExpress.XtraBars.Navigation.AccordionControlElement accordionControlElementSchedule;
         private DevExpress.XtraBars.Navigation.AccordionControlElement accordionControlElementTasks;
         private DevExpress.XtraBars.Navigation.AccordionControlElement accordionControlElementProfile;
+        private DevExpress.XtraBars.Navigation.AccordionControlElement accordionControlElementLogout; // Declared field
+        private DevExpress.XtraEditors.PanelControl mainContentContainer;
     }
 }
