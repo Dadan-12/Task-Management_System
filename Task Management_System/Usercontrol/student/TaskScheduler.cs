@@ -1,8 +1,8 @@
-﻿using DevExpress.XtraEditors;
-using DevExpress.XtraScheduler;
-using System;
-using System.Drawing;
+﻿using System;
 using System.Windows.Forms;
+using DevExpress.Utils.Menu;
+using DevExpress.XtraEditors;
+using DevExpress.XtraScheduler;
 
 namespace Task_Management_System.Usercontrol.student
 {
@@ -11,75 +11,90 @@ namespace Task_Management_System.Usercontrol.student
         public TaskScheduler()
         {
             InitializeComponent();
+            RegisterEventHandlers();
+            InitializeSchedulerDefaults();
+        }
 
-            // Attach Events
-            btnAddNewTask.Click += btnAddNewTask_Click;
-            tabControl1.SelectedIndexChanged += tabControl1_SelectedIndexChanged;
-            schedulerControl1.PopupMenuShowing += schedulerControl1_PopupMenuShowing;
+        /// <summary>
+        /// Centralizes runtime component event registrations.
+        /// </summary>
+        private void RegisterEventHandlers()
+        {
+            btnAddNewTask.Click += BtnAddNewTask_Click;
+            tabControl1.SelectedIndexChanged += TabControl1_SelectedIndexChanged;
+            schedulerControl1.PopupMenuShowing += SchedulerControl1_PopupMenuShowing;
+        }
+
+        /// <summary>
+        /// Applies runtime-specific configuration defaults to the scheduler instance.
+        /// </summary>
+        private void InitializeSchedulerDefaults()
+        {
+            // Dynamically target the user's current calendar day at execution time
+            schedulerControl1.Start = DateTime.Today;
         }
 
         // ====================== EVENT HANDLERS ======================
 
-        private void btnAddNewTask_Click(object sender, EventArgs e)
+        private void BtnAddNewTask_Click(object sender, EventArgs e)
         {
             schedulerControl1.CreateNewAppointment();
         }
 
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        private void TabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControl1.SelectedTab == null) return;
 
-            switch (tabControl1.SelectedTab.Text)
+            // Senior Refactor: Replaced procedural switch-case block with an expressive pattern switch expression
+            schedulerControl1.ActiveViewType = tabControl1.SelectedTab.Text switch
             {
-                case "Daily":
-                    schedulerControl1.ActiveViewType = SchedulerViewType.Day;
-                    break;
-
-                case "Weekly":
-                    schedulerControl1.ActiveViewType = SchedulerViewType.Week;
-                    break;
-
-                case "Monthly":
-                    schedulerControl1.ActiveViewType = SchedulerViewType.Month;
-                    break;
-            }
+                "Daily" => SchedulerViewType.Day,
+                "Weekly" => SchedulerViewType.Week,
+                "Monthly" => SchedulerViewType.Month,
+                _ => SchedulerViewType.Month
+            };
         }
 
-        private void schedulerControl1_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
+        private void SchedulerControl1_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            // Clear default menu items and add our custom ones
+            // Clear default context-menu items to render custom student actions
             e.Menu.Items.Clear();
 
-            // Add New Task (always available)
-            e.Menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem("➕ Add New Task",
+            // Action: Add New Task
+            e.Menu.Items.Add(new DXMenuItem("➕ Add New Task",
                 (s, ev) => schedulerControl1.CreateNewAppointment()));
 
-            // If user right-clicked on an appointment
+            // Action contexts targeting pre-existing appointments
             if (schedulerControl1.SelectedAppointments.Count > 0)
             {
-                var apt = schedulerControl1.SelectedAppointments[0];
+                var targetedAppointment = schedulerControl1.SelectedAppointments[0];
 
-                // Edit
-                e.Menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem("✏️ Edit Appointment",
-                    (s, ev) => schedulerControl1.ShowEditAppointmentForm(apt, false)));   // Fixed method
+                // Action: Edit Appointment
+                e.Menu.Items.Add(new DXMenuItem("✏️ Edit Appointment",
+                    (s, ev) => schedulerControl1.ShowEditAppointmentForm(targetedAppointment, false)));
 
-                // Delete with Confirmation
-                e.Menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem("🗑 Delete Appointment",
+                // Action: Delete Appointment
+                e.Menu.Items.Add(new DXMenuItem("🗑 Delete Appointment",
                     (s, ev) => DeleteAppointmentWithConfirmation()));
             }
         }
 
+        /// <summary>
+        /// Prompts user confirmation within the DevExpress ecosystem prior to data mutation.
+        /// </summary>
         private void DeleteAppointmentWithConfirmation()
         {
             if (schedulerControl1.SelectedAppointments.Count == 0) return;
 
-            var result = MessageBox.Show(
-                "Are you sure you want to delete this appointment?",
-                "Confirm Delete",
+            // Senior Refactor: Standardized native win32 layouts into XtraMessageBox to ensure skin unity
+            var promptResult = XtraMessageBox.Show(
+                this,
+                "Are you sure you want to permanently delete this appointment?",
+                "Confirm Deletion",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning);
 
-            if (result == DialogResult.Yes)
+            if (promptResult == DialogResult.Yes)
             {
                 schedulerControl1.DeleteSelectedAppointments();
             }

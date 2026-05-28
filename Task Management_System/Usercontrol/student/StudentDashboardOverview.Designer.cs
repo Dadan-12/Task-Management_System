@@ -6,9 +6,10 @@
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing)
             {
-                components.Dispose();
+                components?.Dispose();
+                schedulerDataStorage1?.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -127,7 +128,7 @@
             // 
             lblUpcomingTitle.Appearance.Font = new System.Drawing.Font("Segoe UI", 11.5F);
             lblUpcomingTitle.Appearance.Options.UseFont = true;
-            lblUpcomingTitle.Location = new System.Drawing.Point(25, 25);
+            lblUpcomingTitle.Location = new System.Drawing.Point(25, 13);
             lblUpcomingTitle.Name = "lblUpcomingTitle";
             lblUpcomingTitle.Size = new System.Drawing.Size(239, 42);
             lblUpcomingTitle.TabIndex = 0;
@@ -206,14 +207,12 @@
         private DevExpress.XtraEditors.GroupControl cardTodayClasses;
         private DevExpress.XtraEditors.GroupControl cardPendingTasks;
         private DevExpress.XtraEditors.GroupControl cardUpcomingEvents;
-
         private DevExpress.XtraEditors.LabelControl lblTodayTitle;
         private DevExpress.XtraEditors.LabelControl lblTodayCount;
         private DevExpress.XtraEditors.LabelControl lblPendingTitle;
         private DevExpress.XtraEditors.LabelControl lblPendingCount;
         private DevExpress.XtraEditors.LabelControl lblUpcomingTitle;
         private DevExpress.XtraEditors.LabelControl lblUpcomingCount;
-
         private DevExpress.XtraScheduler.SchedulerControl schedulerMini;
         private DevExpress.XtraScheduler.SchedulerDataStorage schedulerDataStorage1;
     }
