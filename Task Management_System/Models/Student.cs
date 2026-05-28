@@ -13,8 +13,7 @@ namespace Task_Management_System.Models
         public string Description { get; set; }
         public string DueDate { get; set; }
         public string Schedule { get; set; }
-        public string PlanType { get; set; }
-        public string Created_at { get; set; }
+           
 
     }
 }

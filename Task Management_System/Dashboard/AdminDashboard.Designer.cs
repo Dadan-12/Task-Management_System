@@ -30,6 +30,7 @@
         {
             accordionSideBar = new DevExpress.XtraBars.Navigation.AccordionControl();
             acDashaboard = new DevExpress.XtraBars.Navigation.AccordionControlElement();
+            acSchedule = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             acRegister = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             acReport = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             panelDashboard = new System.Windows.Forms.Panel();
@@ -41,7 +42,7 @@
             accordionSideBar.Appearance.AccordionControl.BackColor = System.Drawing.Color.DarkSlateGray;
             accordionSideBar.Appearance.AccordionControl.Options.UseBackColor = true;
             accordionSideBar.Dock = System.Windows.Forms.DockStyle.Left;
-            accordionSideBar.Elements.AddRange(new DevExpress.XtraBars.Navigation.AccordionControlElement[] { acDashaboard, acRegister, acReport });
+            accordionSideBar.Elements.AddRange(new DevExpress.XtraBars.Navigation.AccordionControlElement[] { acDashaboard, acSchedule, acRegister, acReport });
             accordionSideBar.Location = new System.Drawing.Point(0, 0);
             accordionSideBar.Name = "accordionSideBar";
             accordionSideBar.Size = new System.Drawing.Size(141, 562);
@@ -57,6 +58,15 @@
             acDashaboard.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
             acDashaboard.Text = "Dashboard";
             acDashaboard.Click += acDashboard_Click;
+            // 
+            // acSchedule
+            // 
+            acSchedule.Appearance.Default.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            acSchedule.Appearance.Default.Options.UseFont = true;
+            acSchedule.Name = "acSchedule";
+            acSchedule.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
+            acSchedule.Text = "Schedule";
+            acSchedule.Click += acSchedule_Click;
             // 
             // acRegister
             // 
@@ -106,5 +116,6 @@
         private DevExpress.XtraBars.Navigation.AccordionControlElement acReport;
         private System.Windows.Forms.Panel panelDashboard;
         private DevExpress.XtraEditors.SearchControl SControl;
+        private DevExpress.XtraBars.Navigation.AccordionControlElement acSchedule;
     }
 }

@@ -1,22 +1,16 @@
-﻿using DevExpress.XtraEditors;
+﻿using Dapper;
+using DevExpress.XtraEditors;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using Microsoft.Data.Sqlite;
-using System.Drawing;
-using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Task_Management_System.Data;
-using Task_Management_System.Models;
 
 namespace Task_Management_System.Dashboards
 {
     public partial class LoginDashboard : DevExpress.XtraEditors.XtraForm
     {
-        DataBase db = new DataBase();
+        private readonly DataBase db = new DataBase();
 
         public LoginDashboard()
         {
@@ -25,37 +19,61 @@ namespace Task_Management_System.Dashboards
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            using (SqliteConnection con = db.GetConnection())
+            if (string.IsNullOrWhiteSpace(txtBoxUsername.Text) ||
+                string.IsNullOrWhiteSpace(txtBoxPassword.Text))
             {
-                try
+                XtraMessageBox.Show("Please enter username and password.",
+                    "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                string username = txtBoxUsername.Text.Trim();
+                string rawPassword = txtBoxPassword.Text;
+                string hashedPassword = HashPassword(rawPassword);
+
+                using var con = db.GetConnection();
+
+                // ✔ Try hashed password first (registered students)
+                var user = con.QueryFirstOrDefault(
+                    "SELECT * FROM User WHERE Username = @Username AND Password = @Password",
+                    new { Username = username, Password = hashedPassword });
+
+                // ✔ Fallback — try plain text (admin account with old password)
+                if (user == null)
                 {
-                    con.Open();
-                    string username = txtBoxUsername.Text;
-                    string password = txtBoxPassword.Text;
-                    string query = @"SELECT * FROM User
-                              WHERE Username=@Username
-                              AND Password=@Password";
-                    SqliteCommand command = new SqliteCommand(query, con);
-                    command.Parameters.AddWithValue("@Username", username);
-                    command.Parameters.AddWithValue("@Password", password);
-                    SqliteDataReader reader = command.ExecuteReader();
-                    if (reader.Read())
-                    {
-                        XtraMessageBox.Show("Login Successfully!");
-                        AdminDashboard dashboard = new AdminDashboard(username);
-                        dashboard.Show();
-                        this.Hide();
-                    }
-                    else
-                    {
-                        XtraMessageBox.Show("Invalid Username or Password!");
-                    }
+                    user = con.QueryFirstOrDefault(
+                        "SELECT * FROM User WHERE Username = @Username AND Password = @Password",
+                        new { Username = username, Password = rawPassword });
                 }
-                catch (Exception ex)
+
+                if (user != null)
                 {
-                    XtraMessageBox.Show(ex.Message);
+                    XtraMessageBox.Show("Login Successfully!",
+                        "Welcome", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    AdminDashboard dashboard = new AdminDashboard(username);
+                    dashboard.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    XtraMessageBox.Show("Invalid Username or Password!",
+                        "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show("Error: " + ex.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private string HashPassword(string password)
+        {
+            using var sha = SHA256.Create();
+            byte[] bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(password));
+            return Convert.ToBase64String(bytes);
         }
     }
 }
