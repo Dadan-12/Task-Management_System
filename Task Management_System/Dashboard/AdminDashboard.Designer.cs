@@ -2,16 +2,16 @@
 {
     partial class AdminDashboard
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
             {
@@ -20,21 +20,21 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
         {
             accordionSideBar = new DevExpress.XtraBars.Navigation.AccordionControl();
             acDashaboard = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             acRegister = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             acReport = new DevExpress.XtraBars.Navigation.AccordionControlElement();
-            acSchedule = new DevExpress.XtraBars.Navigation.AccordionControlElement(); // 👈 Added Schedule Element
+            acSchedule = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             acLogout = new DevExpress.XtraBars.Navigation.AccordionControlElement();
-            panelDashboard = new DevExpress.XtraEditors.PanelControl(); // 👈 Updated to pure DevExpress PanelControl
+            panelDashboard = new DevExpress.XtraEditors.PanelControl();
             ((System.ComponentModel.ISupportInitialize)accordionSideBar).BeginInit();
             ((System.ComponentModel.ISupportInitialize)panelDashboard).BeginInit();
             SuspendLayout();
@@ -46,8 +46,9 @@
             accordionSideBar.Dock = System.Windows.Forms.DockStyle.Left;
             accordionSideBar.Elements.AddRange(new DevExpress.XtraBars.Navigation.AccordionControlElement[] { acDashaboard, acRegister, acReport, acSchedule, acLogout });
             accordionSideBar.Location = new System.Drawing.Point(0, 0);
+            accordionSideBar.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             accordionSideBar.Name = "accordionSideBar";
-            accordionSideBar.Size = new System.Drawing.Size(141, 562);
+            accordionSideBar.Size = new System.Drawing.Size(324, 1081);
             accordionSideBar.TabIndex = 1;
             accordionSideBar.ViewType = DevExpress.XtraBars.Navigation.AccordionControlViewType.HamburgerMenu;
             // 
@@ -85,8 +86,8 @@
             acSchedule.Appearance.Default.Options.UseFont = true;
             acSchedule.Name = "acSchedule";
             acSchedule.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
-            acSchedule.Text = "Schedule"; // 👈 Context label config
-            acSchedule.Click += acSchedule_Click; // 👈 Wired click action handler
+            acSchedule.Text = "Schedule";
+            acSchedule.Click += acSchedule_Click;
             // 
             // acLogout
             // 
@@ -101,20 +102,22 @@
             // 
             // panelDashboard
             // 
-            panelDashboard.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder; // Borderless layout mapping
+            panelDashboard.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             panelDashboard.Dock = System.Windows.Forms.DockStyle.Fill;
-            panelDashboard.Location = new System.Drawing.Point(141, 0);
+            panelDashboard.Location = new System.Drawing.Point(324, 0);
+            panelDashboard.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             panelDashboard.Name = "panelDashboard";
-            panelDashboard.Size = new System.Drawing.Size(754, 562);
+            panelDashboard.Size = new System.Drawing.Size(1466, 1081);
             panelDashboard.TabIndex = 2;
             // 
             // AdminDashboard
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(895, 562);
+            ClientSize = new System.Drawing.Size(1790, 1081);
             Controls.Add(panelDashboard);
             Controls.Add(accordionSideBar);
+            Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             Name = "AdminDashboard";
             StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             Text = "Admin Workspace Dashboard";
@@ -124,13 +127,13 @@
             ResumeLayout(false);
         }
 
-        #endregion
-        private DevExpress.XtraBars.Navigation.AccordionControl accordionSideBar;
+        #endregion
+        private DevExpress.XtraBars.Navigation.AccordionControl accordionSideBar;
         private DevExpress.XtraBars.Navigation.AccordionControlElement acDashaboard;
         private DevExpress.XtraBars.Navigation.AccordionControlElement acRegister;
         private DevExpress.XtraBars.Navigation.AccordionControlElement acReport;
         private DevExpress.XtraBars.Navigation.AccordionControlElement acSchedule; // 👈 Backing variable configuration
-        private DevExpress.XtraBars.Navigation.AccordionControlElement acLogout;
+        private DevExpress.XtraBars.Navigation.AccordionControlElement acLogout;
         private DevExpress.XtraEditors.PanelControl panelDashboard; // 👈 DevExpress Type Assignment
-    }
+    }
 }

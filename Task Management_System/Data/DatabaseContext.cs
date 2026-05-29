@@ -73,6 +73,7 @@ namespace Task_Management_System.Data
                     FullName TEXT,
                     Email TEXT,
                     Course TEXT,
+                    Section TEXT,
                     Phone TEXT,
                     PasswordHash TEXT,
                     ProfileImage BLOB
@@ -124,12 +125,12 @@ namespace Task_Management_System.Data
                     Student_Id TEXT,
                     FirstName TEXT,
                     LastName TEXT,
+                    Email TEXT,
                     Section TEXT,
                     Date TEXT
                 );");
 
             // Table 7: Academic Course Timetables and Room Allocation Registry
-            // 🎯 FIXED: Integrated Title and Section attributes directly into the core layout template
             connection.Execute(@"
                 CREATE TABLE IF NOT EXISTS ClassSchedule (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -144,19 +145,77 @@ namespace Task_Management_System.Data
                     EndTime TEXT
                 );");
 
-            // 🔄 SAFE LIVE MIGRATION ROUTINE: Automatically appends missing column descriptors into running instances safely
+            // 🔄 SAFE CASE-INSENSITIVE LIVE MIGRATION ROUTINE
+            // Ensures columns that were added incrementally exist in older database configurations.
             try
             {
-                var titleCheck = connection.ExecuteScalar<string>("SELECT name FROM pragma_table_info('ClassSchedule') WHERE name='Title';");
-                if (string.IsNullOrEmpty(titleCheck))
+                // --- Students Table Verification ---
+                var studentSectionCheck = connection.ExecuteScalar<string>("SELECT name FROM pragma_table_info('Students') WHERE UPPER(name)='SECTION';");
+                if (string.IsNullOrEmpty(studentSectionCheck))
+                {
+                    connection.Execute("ALTER TABLE Students ADD COLUMN Section TEXT;");
+                }
+
+                // --- ClassSchedule Table Verification ---
+                var csTitleCheck = connection.ExecuteScalar<string>("SELECT name FROM pragma_table_info('ClassSchedule') WHERE UPPER(name)='TITLE';");
+                if (string.IsNullOrEmpty(csTitleCheck))
                 {
                     connection.Execute("ALTER TABLE ClassSchedule ADD COLUMN Title TEXT;");
                 }
 
-                var sectionCheck = connection.ExecuteScalar<string>("SELECT name FROM pragma_table_info('ClassSchedule') WHERE name='Section';");
-                if (string.IsNullOrEmpty(sectionCheck))
+                var csSubjectCheck = connection.ExecuteScalar<string>("SELECT name FROM pragma_table_info('ClassSchedule') WHERE UPPER(name)='SUBJECT';");
+                if (string.IsNullOrEmpty(csSubjectCheck))
+                {
+                    connection.Execute("ALTER TABLE ClassSchedule ADD COLUMN Subject TEXT;");
+                }
+
+                var csDescriptionCheck = connection.ExecuteScalar<string>("SELECT name FROM pragma_table_info('ClassSchedule') WHERE UPPER(name)='DESCRIPTION';");
+                if (string.IsNullOrEmpty(csDescriptionCheck))
+                {
+                    connection.Execute("ALTER TABLE ClassSchedule ADD COLUMN Description TEXT;");
+                }
+
+                var csSectionCheck = connection.ExecuteScalar<string>("SELECT name FROM pragma_table_info('ClassSchedule') WHERE UPPER(name)='SECTION';");
+                if (string.IsNullOrEmpty(csSectionCheck))
                 {
                     connection.Execute("ALTER TABLE ClassSchedule ADD COLUMN Section TEXT;");
+                }
+
+                var csRoomCheck = connection.ExecuteScalar<string>("SELECT name FROM pragma_table_info('ClassSchedule') WHERE UPPER(name)='ROOM';");
+                if (string.IsNullOrEmpty(csRoomCheck))
+                {
+                    connection.Execute("ALTER TABLE ClassSchedule ADD COLUMN Room TEXT;");
+                }
+
+                var csDayOfWeekCheck = connection.ExecuteScalar<string>("SELECT name FROM pragma_table_info('ClassSchedule') WHERE UPPER(name)='DAYOFWEEK';");
+                if (string.IsNullOrEmpty(csDayOfWeekCheck))
+                {
+                    connection.Execute("ALTER TABLE ClassSchedule ADD COLUMN DayOfWeek TEXT;");
+                }
+
+                var csStartTimeCheck = connection.ExecuteScalar<string>("SELECT name FROM pragma_table_info('ClassSchedule') WHERE UPPER(name)='STARTTIME';");
+                if (string.IsNullOrEmpty(csStartTimeCheck))
+                {
+                    connection.Execute("ALTER TABLE ClassSchedule ADD COLUMN StartTime TEXT;");
+                }
+
+                var csEndTimeCheck = connection.ExecuteScalar<string>("SELECT name FROM pragma_table_info('ClassSchedule') WHERE UPPER(name)='ENDTIME';");
+                if (string.IsNullOrEmpty(csEndTimeCheck))
+                {
+                    connection.Execute("ALTER TABLE ClassSchedule ADD COLUMN EndTime TEXT;");
+                }
+
+                // --- Admin Table Verification ---
+                var adminEmailCheck = connection.ExecuteScalar<string>("SELECT name FROM pragma_table_info('Admin') WHERE UPPER(name)='EMAIL';");
+                if (string.IsNullOrEmpty(adminEmailCheck))
+                {
+                    connection.Execute("ALTER TABLE Admin ADD COLUMN Email TEXT;");
+                }
+
+                var adminSectionCheck = connection.ExecuteScalar<string>("SELECT name FROM pragma_table_info('Admin') WHERE UPPER(name)='SECTION';");
+                if (string.IsNullOrEmpty(adminSectionCheck))
+                {
+                    connection.Execute("ALTER TABLE Admin ADD COLUMN Section TEXT;");
                 }
             }
             catch (SqliteException) { /* Managed gracefully */ }
@@ -188,8 +247,8 @@ namespace Task_Management_System.Data
             if (connection.ExecuteScalar<int>("SELECT COUNT(1) FROM Students WHERE StudentId = @StudentId;", new { StudentId = "STU-2026-0001" }) == 0)
             {
                 connection.Execute(@"
-                    INSERT INTO Students (StudentId, FullName, Email, Course, Phone, PasswordHash, ProfileImage)
-                    VALUES (@StudentId, 'Administrator', 'admin@university.edu', 'B.S. Computer Science', '+1 (555) 019-2834', '123', NULL);",
+                    INSERT INTO Students (StudentId, FullName, Email, Course, Section, Phone, PasswordHash, ProfileImage)
+                    VALUES (@StudentId, 'Administrator', 'admin@university.edu', 'B.S. Computer Science', 'NEUMANN', '+1 (555) 019-2834', '123', NULL);",
                     new { StudentId = "STU-2026-0001" });
             }
             if (connection.ExecuteScalar<int>("SELECT COUNT(1) FROM Users WHERE Username = @Username;", new { Username = "STU-2026-0001" }) == 0)
@@ -203,10 +262,16 @@ namespace Task_Management_System.Data
             if (connection.ExecuteScalar<int>("SELECT COUNT(1) FROM Students WHERE StudentId = @StudentId;", new { StudentId = "2016-0474" }) == 0)
             {
                 connection.Execute(@"
-                    INSERT INTO Students (StudentId, FullName, Email, Course, Phone, PasswordHash, ProfileImage)
-                    VALUES (@StudentId, 'Khimuel Diamante', 'khimueld_diamante@dmc.edu.ph', 'IT', '093524656', 'KhimzUgh', NULL);",
+                    INSERT INTO Students (StudentId, FullName, Email, Course, Section, Phone, PasswordHash, ProfileImage)
+                    VALUES (@StudentId, 'Khimuel Diamante', 'khimueld_diamante@dmc.edu.ph', 'IT', 'NEUMANN', '093524656', 'KhimzUgh', NULL);",
                     new { StudentId = "2016-0474" });
             }
+            else
+            {
+                // Ensure existing records have a valid section mapped to connect dashboards properly
+                connection.Execute("UPDATE Students SET Section = 'NEUMANN' WHERE StudentId = '2016-0474' AND (Section IS NULL OR Section = '');");
+            }
+
             if (connection.ExecuteScalar<int>("SELECT COUNT(1) FROM Users WHERE Username = @Username;", new { Username = "2016-0474" }) == 0)
             {
                 connection.Execute(@"
@@ -222,8 +287,8 @@ namespace Task_Management_System.Data
             if (connection.ExecuteScalar<int>("SELECT COUNT(1) FROM Students WHERE StudentId = @StudentId;", new { StudentId = "admin" }) == 0)
             {
                 connection.Execute(@"
-                    INSERT INTO Students (StudentId, FullName, Email, Course, Phone, PasswordHash, ProfileImage)
-                    VALUES (@StudentId, 'System Administrator', 'admin@dmc.edu.ph', 'IT Management', '00000', '123', NULL);",
+                    INSERT INTO Students (StudentId, FullName, Email, Course, Section, Phone, PasswordHash, ProfileImage)
+                    VALUES (@StudentId, 'System Administrator', 'admin@dmc.edu.ph', 'IT Management', 'ADMIN', '00000', '123', NULL);",
                     new { StudentId = "admin" });
             }
 

@@ -182,6 +182,17 @@ namespace Task_Management_System.Usercontrol.student
             schedulerMini.Size = new System.Drawing.Size(1570, 750);
             schedulerMini.Start = new System.DateTime(2026, 5, 24, 0, 0, 0, 0);
             schedulerMini.TabIndex = 5;
+
+            // 🔒 READ-ONLY SCHEDULER IMPLEMENTATION
+            schedulerMini.OptionsCustomization.AllowAppointmentCreate = UsedAppointmentType.None;
+            schedulerMini.OptionsCustomization.AllowAppointmentEdit = UsedAppointmentType.None;
+            schedulerMini.OptionsCustomization.AllowAppointmentDelete = UsedAppointmentType.None;
+            schedulerMini.OptionsCustomization.AllowAppointmentResize = UsedAppointmentType.None;
+            schedulerMini.OptionsCustomization.AllowAppointmentDrag = UsedAppointmentType.None;
+            schedulerMini.OptionsCustomization.AllowAppointmentDragBetweenResources = UsedAppointmentType.None;
+            schedulerMini.OptionsCustomization.AllowAppointmentCopy = UsedAppointmentType.None;
+            schedulerMini.OptionsCustomization.AllowInplaceEditor = UsedAppointmentType.None;
+
             schedulerMini.Views.AgendaView.Enabled = false;
             schedulerMini.Views.DayView.Enabled = false;
             schedulerMini.Views.TimelineView.Enabled = false;
@@ -190,9 +201,6 @@ namespace Task_Management_System.Usercontrol.student
             schedulerMini.Views.YearView.UseOptimizedScrolling = false;
             // 
             // schedulerDataStorage1
-            // 
-            // 
-            // 
             // 
             schedulerDataStorage1.Appointments.Labels.CreateNewLabel(0, "None", "&None", System.Drawing.SystemColors.Window);
             schedulerDataStorage1.Appointments.Labels.CreateNewLabel(1, "Important", "&Important", System.Drawing.Color.FromArgb(255, 194, 190));

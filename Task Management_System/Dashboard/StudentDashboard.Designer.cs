@@ -20,33 +20,23 @@ namespace Task_Management_System.Dashboard
             accordionControl1 = new AccordionControl();
             accordionControlElementDashboard = new AccordionControlElement();
             accordionControlElementSchedule = new AccordionControlElement();
-            accordionControlElementClassSchedule = new AccordionControlElement(); // 👈 Added Class Schedule Item
+            accordionControlElementClassSchedule = new AccordionControlElement();
             accordionControlElementTasks = new AccordionControlElement();
             accordionControlElementProfile = new AccordionControlElement();
             accordionControlElementLogout = new AccordionControlElement();
             mainContentContainer = new DevExpress.XtraEditors.PanelControl();
-
             ((System.ComponentModel.ISupportInitialize)accordionControl1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)mainContentContainer).BeginInit();
-            mainContentContainer.SuspendLayout();
             SuspendLayout();
             // 
             // accordionControl1
             // 
             accordionControl1.Dock = System.Windows.Forms.DockStyle.Left;
-            // Included the new class schedule option in the rendering loop list
-            accordionControl1.Elements.AddRange(new AccordionControlElement[] {
-                accordionControlElementDashboard,
-                accordionControlElementSchedule,
-                accordionControlElementClassSchedule, // 👈 Added to sidebar layout order
-                accordionControlElementTasks,
-                accordionControlElementProfile,
-                accordionControlElementLogout
-            });
+            accordionControl1.Elements.AddRange(new AccordionControlElement[] { accordionControlElementDashboard, accordionControlElementSchedule, accordionControlElementClassSchedule, accordionControlElementTasks, accordionControlElementProfile, accordionControlElementLogout });
             accordionControl1.Location = new System.Drawing.Point(0, 0);
             accordionControl1.Margin = new System.Windows.Forms.Padding(4);
             accordionControl1.Name = "accordionControl1";
-            accordionControl1.Size = new System.Drawing.Size(390, 1268);
+            accordionControl1.Size = new System.Drawing.Size(500, 1268);
             accordionControl1.TabIndex = 25;
             accordionControl1.ViewType = AccordionControlViewType.HamburgerMenu;
             // 
@@ -66,8 +56,8 @@ namespace Task_Management_System.Dashboard
             // 
             accordionControlElementClassSchedule.Name = "accordionControlElementClassSchedule";
             accordionControlElementClassSchedule.Style = ElementStyle.Item;
-            accordionControlElementClassSchedule.Text = "Class Schedule"; // 👈 Label assignment
-            accordionControlElementClassSchedule.Click += accordionControlElementClassSchedule_Click; // 👈 Wired Click Action Handler stub
+            accordionControlElementClassSchedule.Text = "Class Schedule";
+            accordionControlElementClassSchedule.Click += accordionControlElementClassSchedule_Click;
             // 
             // accordionControlElementTasks
             // 
@@ -91,10 +81,10 @@ namespace Task_Management_System.Dashboard
             // 
             mainContentContainer.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             mainContentContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            mainContentContainer.Location = new System.Drawing.Point(390, 0);
+            mainContentContainer.Location = new System.Drawing.Point(500, 0);
             mainContentContainer.Margin = new System.Windows.Forms.Padding(4);
             mainContentContainer.Name = "mainContentContainer";
-            mainContentContainer.Size = new System.Drawing.Size(1725, 1268);
+            mainContentContainer.Size = new System.Drawing.Size(1615, 1268);
             mainContentContainer.TabIndex = 26;
             // 
             // StudentDashboard
@@ -114,7 +104,6 @@ namespace Task_Management_System.Dashboard
             WindowState = System.Windows.Forms.FormWindowState.Maximized;
             ((System.ComponentModel.ISupportInitialize)accordionControl1).EndInit();
             ((System.ComponentModel.ISupportInitialize)mainContentContainer).EndInit();
-            mainContentContainer.ResumeLayout(false);
             ResumeLayout(false);
         }
 

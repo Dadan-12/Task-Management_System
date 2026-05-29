@@ -18,12 +18,36 @@ namespace Task_Management_System.Usercontrol.student
         // 📍 STORAGE STACK: Data-binding container layer assigned to the overview mini scheduler
         private BindingList<LocalAppointment> dashboardAppointmentsList = new BindingList<LocalAppointment>();
 
-        public StudentDashboardOverview()
+        // 📍 CONTEXT FIELDS: Tracks the logged-in student's identity and assigned course section
+        private readonly string _currentStudentId;
+        private readonly string _currentSection;
+
+        /// <summary>
+        /// DYNAMIC CONSTRUCTOR: Initializes the Student Dashboard overview with custom user contexts.
+        /// Defaults to a specialized placeholder tag to keep the Visual Studio Form Designer operational,
+        /// while enabling any valid user account to populate the workspace automatically at runtime.
+        /// </summary>
+        /// <param name="studentId">Active student profile ID or key</param>
+        /// <param name="section">Assigned class section name like 'NEUMANN' or 'AIKEN'</param>
+        public StudentDashboardOverview(string studentId = "DESIGN_TIME_DEFAULT", string section = "NEUMANN")
         {
             InitializeComponent();
+
+            _currentStudentId = studentId;
+            _currentSection = string.IsNullOrWhiteSpace(section) ? "NEUMANN" : section.ToUpper();
+
             SetupDashboardSchedulerOptions();
 
-            this.Load += async (s, e) => await InitializeDashboardDataAsync();
+            // 🛠 DESIGNER SAFE-GUARD: Run the asynchronous database pipeline only for active runtime user sessions
+            if (!DesignMode && _currentStudentId != "DESIGN_TIME_DEFAULT")
+            {
+                this.Load += async (s, e) => await InitializeDashboardDataAsync();
+            }
+            else
+            {
+                // Fallback text layout to keep visual canvas tidy in visual studio editor
+                lblWelcome.Text = "Good Morning, Student!";
+            }
         }
 
         // 📍 SCHEDULER CONFIGURATION: Maps structural layout properties and enforces strict read-only states
@@ -54,14 +78,35 @@ namespace Task_Management_System.Usercontrol.student
         // 📍 LIFECYCLE INITIALIZER: Configures runtime greeting contexts, workspace labels, and triggers metric queries
         public async Task InitializeDashboardDataAsync()
         {
+            // Exit early if called under designer context parameters
+            if (_currentStudentId == "DESIGN_TIME_DEFAULT") return;
+
             schedulerMini.Start = DateTime.Today;
 
+            // 🕒 DYNAMIC TIME GREETING: Dynamically tracks current hours to determine context greeting
             int currentHour = DateTime.Now.Hour;
             string greeting = "Good Evening";
             if (currentHour < 12) greeting = "Good Morning";
             else if (currentHour < 17) greeting = "Good Afternoon";
 
-            lblWelcome.Text = $"{greeting}, Student!";
+            // ✔ DYNAMIC PROFILING: Queries the database directly using the dynamic Student ID to fetch whichever user logged in
+            string studentName = "Student";
+            try
+            {
+                using (var db = DatabaseContext.CreateConnection())
+                {
+                    studentName = await db.ExecuteScalarAsync<string>(
+                        "SELECT FullName FROM Students WHERE StudentId = @StudentId;",
+                        new { StudentId = _currentStudentId }) ?? "Student";
+                }
+            }
+            catch
+            {
+                // Fallback to default generic name gracefully if database is locked or inaccessible
+                studentName = "Student";
+            }
+
+            lblWelcome.Text = $"{greeting}, {studentName}!";
 
             schedulerDataStorage1.Appointments.Labels.Clear();
             schedulerDataStorage1.Appointments.Labels.CreateNewLabel(0, "None", "&None", System.Drawing.SystemColors.Window);
@@ -79,48 +124,85 @@ namespace Task_Management_System.Usercontrol.student
             await RefreshKPIWidgetsAndLoadSchedulerAsync();
         }
 
-        // 📍 ASYNC PARALLEL DATA ENGINE: Executes non-blocking database operations to load KPIs and calendars simultaneously
+        // 📍 ASYNC PARALLEL DATA ENGINE: Executes database operations to load KPIs and calendars simultaneously
         private async Task RefreshKPIWidgetsAndLoadSchedulerAsync()
         {
+            if (_currentStudentId == "DESIGN_TIME_DEFAULT") return;
+
             try
             {
                 string currentDayStr = DateTime.Today.ToString("yyyy-MM-dd");
                 string nowStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
                 // 📍 ISOLATED THREAD TASKS: Multi-threaded queries targeting unique connection signatures to safeguard SQLite integrity
+
+                // ✔ CONNECTED FILTER: Pull today's classes added by the Admin for this student's specific section
                 var todayClassesTask = Task.Run(() =>
                 {
                     using (var db = DatabaseContext.CreateConnection())
                     {
                         return db.ExecuteScalar<int>(
-                            "SELECT COUNT(1) FROM Appointments WHERE LabelKey = 1 AND strftime('%Y-%m-%d', StartTime) = @Today;",
-                            new { Today = currentDayStr });
+                            @"SELECT COUNT(1) FROM ClassSchedule  
+                              WHERE UPPER(Section) = @Section  
+                              AND strftime('%Y-%m-%d', StartTime) = @Today;",
+                            new { Section = _currentSection, Today = currentDayStr });
                     }
                 });
 
+                // ✔ CONNECTED FILTER: Pull total tasks logged explicitly against this user's unique Student ID
                 var pendingTasksTask = Task.Run(() =>
                 {
                     using (var db = DatabaseContext.CreateConnection())
                     {
-                        return db.ExecuteScalar<int>("SELECT COUNT(1) FROM Appointments WHERE LabelKey IN (3, 4);");
+                        return db.ExecuteScalar<int>(
+                            "SELECT COUNT(1) FROM StudentTask WHERE StudentID = @StudentId;",
+                            new { StudentId = _currentStudentId });
                     }
                 });
 
+                // ✔ CONNECTED FILTER: Pull total upcoming schedule entries posted to this student's specific section
                 var upcomingEventsTask = Task.Run(() =>
                 {
                     using (var db = DatabaseContext.CreateConnection())
                     {
                         return db.ExecuteScalar<int>(
-                            "SELECT COUNT(1) FROM Appointments WHERE StartTime > @Now;",
-                            new { Now = nowStr });
+                            @"SELECT COUNT(1) FROM ClassSchedule  
+                              WHERE UPPER(Section) = @Section  
+                              AND StartTime > @Now;",
+                            new { Section = _currentSection, Now = nowStr });
                     }
                 });
 
+                // ✔ PIPELINE TRANSLATION: Loads rows from ClassSchedule securely into LocalAppointment models
                 var loadAppointmentsTask = Task.Run(() =>
                 {
                     using (var db = DatabaseContext.CreateConnection())
                     {
-                        return db.Query<LocalAppointment>("SELECT * FROM Appointments;").ToList();
+                        var rawSchedules = db.Query(
+                            @"SELECT Id, Title, StartTime, EndTime, Section  
+                              FROM ClassSchedule  
+                              WHERE UPPER(Section) = @Section;",
+                            new { Section = _currentSection }).ToList();
+
+                        return rawSchedules.Select(s => {
+                            DateTime.TryParse(s.StartTime?.ToString(), out DateTime parsedStart);
+                            DateTime.TryParse(s.EndTime?.ToString(), out DateTime parsedEnd);
+
+                            string subjectName = (string)s.Title ?? "Class Lecture";
+
+                            return new LocalAppointment
+                            {
+                                UniqueId = s.Id.ToString(),
+                                Subject = subjectName,
+                                Description = $"Assigned Section: {_currentSection}",
+                                StartTime = parsedStart.ToString("yyyy-MM-dd HH:mm:ss"),
+                                EndTime = parsedEnd.ToString("yyyy-MM-dd HH:mm:ss"),
+                                LabelKey = _currentSection == "NEUMANN" ? 1 : 2,
+                                StatusKey = 0,
+                                AllDay = false,
+                                Location = "Main Campus"
+                            };
+                        }).ToList();
                     }
                 });
 

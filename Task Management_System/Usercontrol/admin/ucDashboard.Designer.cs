@@ -101,6 +101,9 @@
             // 
             // pnlTotalStudent
             // 
+            this.pnlTotalStudent.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(63)))), ((int)(((byte)(84)))));
+            this.pnlTotalStudent.Appearance.Options.UseBackColor = true;
+            this.pnlTotalStudent.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.pnlTotalStudent.Controls.Add(this.lblTotalValue);
             this.pnlTotalStudent.Controls.Add(this.lblTotalTitle);
             this.pnlTotalStudent.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -112,7 +115,9 @@
             // lblTotalValue
             // 
             this.lblTotalValue.Appearance.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalValue.Appearance.ForeColor = System.Drawing.Color.White;
             this.lblTotalValue.Appearance.Options.UseFont = true;
+            this.lblTotalValue.Appearance.Options.UseForeColor = true;
             this.lblTotalValue.Location = new System.Drawing.Point(15, 38);
             this.lblTotalValue.Name = "lblTotalValue";
             this.lblTotalValue.Size = new System.Drawing.Size(18, 45);
@@ -121,8 +126,10 @@
             // 
             // lblTotalTitle
             // 
-            this.lblTotalTitle.Appearance.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalTitle.Appearance.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalTitle.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(225)))), ((int)(((byte)(230)))));
             this.lblTotalTitle.Appearance.Options.UseFont = true;
+            this.lblTotalTitle.Appearance.Options.UseForeColor = true;
             this.lblTotalTitle.Location = new System.Drawing.Point(15, 12);
             this.lblTotalTitle.Name = "lblTotalTitle";
             this.lblTotalTitle.Size = new System.Drawing.Size(127, 20);
@@ -131,6 +138,9 @@
             // 
             // pnlSection
             // 
+            this.pnlSection.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.pnlSection.Appearance.Options.UseBackColor = true;
+            this.pnlSection.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.pnlSection.Controls.Add(this.lblSectionValue);
             this.pnlSection.Controls.Add(this.lblSectionTitle);
             this.pnlSection.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -142,7 +152,9 @@
             // lblSectionValue
             // 
             this.lblSectionValue.Appearance.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSectionValue.Appearance.ForeColor = System.Drawing.Color.White;
             this.lblSectionValue.Appearance.Options.UseFont = true;
+            this.lblSectionValue.Appearance.Options.UseForeColor = true;
             this.lblSectionValue.Location = new System.Drawing.Point(15, 38);
             this.lblSectionValue.Name = "lblSectionValue";
             this.lblSectionValue.Size = new System.Drawing.Size(18, 45);
@@ -151,8 +163,10 @@
             // 
             // lblSectionTitle
             // 
-            this.lblSectionTitle.Appearance.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSectionTitle.Appearance.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSectionTitle.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(225)))), ((int)(((byte)(230)))));
             this.lblSectionTitle.Appearance.Options.UseFont = true;
+            this.lblSectionTitle.Appearance.Options.UseForeColor = true;
             this.lblSectionTitle.Location = new System.Drawing.Point(15, 12);
             this.lblSectionTitle.Name = "lblSectionTitle";
             this.lblSectionTitle.Size = new System.Drawing.Size(120, 20);
@@ -161,6 +175,9 @@
             // 
             // panel1
             // 
+            this.panel1.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(73)))), ((int)(((byte)(94)))));
+            this.panel1.Appearance.Options.UseBackColor = true;
+            this.panel1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.panel1.Controls.Add(this.lblDateValue);
             this.panel1.Controls.Add(this.lblDateTitle);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -172,7 +189,9 @@
             // lblDateValue
             // 
             this.lblDateValue.Appearance.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDateValue.Appearance.ForeColor = System.Drawing.Color.White;
             this.lblDateValue.Appearance.Options.UseFont = true;
+            this.lblDateValue.Appearance.Options.UseForeColor = true;
             this.lblDateValue.Location = new System.Drawing.Point(15, 44);
             this.lblDateValue.Name = "lblDateValue";
             this.lblDateValue.Size = new System.Drawing.Size(143, 32);
@@ -181,8 +200,10 @@
             // 
             // lblDateTitle
             // 
-            this.lblDateTitle.Appearance.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDateTitle.Appearance.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDateTitle.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(225)))), ((int)(((byte)(230)))));
             this.lblDateTitle.Appearance.Options.UseFont = true;
+            this.lblDateTitle.Appearance.Options.UseForeColor = true;
             this.lblDateTitle.Location = new System.Drawing.Point(15, 12);
             this.lblDateTitle.Name = "lblDateTitle";
             this.lblDateTitle.Size = new System.Drawing.Size(84, 20);
@@ -334,6 +355,9 @@
             // pnlStudentHeaderCard
             // 
             this.pnlStudentHeaderCard.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlStudentHeaderCard.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(34)))), ((int)(((byte)(42)))));
+            this.pnlStudentHeaderCard.Appearance.Options.UseBackColor = true;
+            this.pnlStudentHeaderCard.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.pnlStudentHeaderCard.Controls.Add(this.btnReturnToGrid);
             this.pnlStudentHeaderCard.Controls.Add(this.lblStudentWelcomeTitle);
             this.pnlStudentHeaderCard.Location = new System.Drawing.Point(15, 15);
@@ -344,7 +368,9 @@
             // lblStudentWelcomeTitle
             // 
             this.lblStudentWelcomeTitle.Appearance.Font = new System.Drawing.Font("Segoe UI", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStudentWelcomeTitle.Appearance.ForeColor = System.Drawing.Color.White;
             this.lblStudentWelcomeTitle.Appearance.Options.UseFont = true;
+            this.lblStudentWelcomeTitle.Appearance.Options.UseForeColor = true;
             this.lblStudentWelcomeTitle.Location = new System.Drawing.Point(15, 16);
             this.lblStudentWelcomeTitle.Name = "lblStudentWelcomeTitle";
             this.lblStudentWelcomeTitle.Size = new System.Drawing.Size(370, 40);
@@ -382,6 +408,9 @@
             // 
             // cardStudentId
             // 
+            this.cardStudentId.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(73)))), ((int)(((byte)(94)))));
+            this.cardStudentId.Appearance.Options.UseBackColor = true;
+            this.cardStudentId.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.cardStudentId.Controls.Add(this.lblCardIdValue);
             this.cardStudentId.Controls.Add(this.lblCardIdTitle);
             this.cardStudentId.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -392,8 +421,8 @@
             // 
             // lblCardIdTitle
             // 
-            this.lblCardIdTitle.Appearance.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCardIdTitle.Appearance.ForeColor = System.Drawing.Color.Gray;
+            this.lblCardIdTitle.Appearance.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCardIdTitle.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(210)))), ((int)(((byte)(220)))));
             this.lblCardIdTitle.Appearance.Options.UseFont = true;
             this.lblCardIdTitle.Appearance.Options.UseForeColor = true;
             this.lblCardIdTitle.Location = new System.Drawing.Point(15, 15);
@@ -405,7 +434,7 @@
             // lblCardIdValue
             // 
             this.lblCardIdValue.Appearance.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCardIdValue.Appearance.ForeColor = System.Drawing.Color.DimGray;
+            this.lblCardIdValue.Appearance.ForeColor = System.Drawing.Color.White;
             this.lblCardIdValue.Appearance.Options.UseFont = true;
             this.lblCardIdValue.Appearance.Options.UseForeColor = true;
             this.lblCardIdValue.Location = new System.Drawing.Point(15, 42);
@@ -416,6 +445,9 @@
             // 
             // cardStudentSection
             // 
+            this.cardStudentSection.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(62)))), ((int)(((byte)(80)))));
+            this.cardStudentSection.Appearance.Options.UseBackColor = true;
+            this.cardStudentSection.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.cardStudentSection.Controls.Add(this.lblCardSectionValue);
             this.cardStudentSection.Controls.Add(this.lblCardSectionTitle);
             this.cardStudentSection.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -426,8 +458,8 @@
             // 
             // lblCardSectionTitle
             // 
-            this.lblCardSectionTitle.Appearance.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCardSectionTitle.Appearance.ForeColor = System.Drawing.Color.Gray;
+            this.lblCardSectionTitle.Appearance.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCardSectionTitle.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(210)))), ((int)(((byte)(220)))));
             this.lblCardSectionTitle.Appearance.Options.UseFont = true;
             this.lblCardSectionTitle.Appearance.Options.UseForeColor = true;
             this.lblCardSectionTitle.Location = new System.Drawing.Point(15, 15);
@@ -439,7 +471,7 @@
             // lblCardSectionValue
             // 
             this.lblCardSectionValue.Appearance.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCardSectionValue.Appearance.ForeColor = System.Drawing.Color.DarkCyan;
+            this.lblCardSectionValue.Appearance.ForeColor = System.Drawing.Color.White;
             this.lblCardSectionValue.Appearance.Options.UseFont = true;
             this.lblCardSectionValue.Appearance.Options.UseForeColor = true;
             this.lblCardSectionValue.Location = new System.Drawing.Point(15, 42);
@@ -450,6 +482,9 @@
             // 
             // cardStudentTasks
             // 
+            this.cardStudentTasks.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
+            this.cardStudentTasks.Appearance.Options.UseBackColor = true;
+            this.cardStudentTasks.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.cardStudentTasks.Controls.Add(this.lblCardTasksValue);
             this.cardStudentTasks.Controls.Add(this.lblCardTasksTitle);
             this.cardStudentTasks.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -460,8 +495,8 @@
             // 
             // lblCardTasksTitle
             // 
-            this.lblCardTasksTitle.Appearance.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCardTasksTitle.Appearance.ForeColor = System.Drawing.Color.Gray;
+            this.lblCardTasksTitle.Appearance.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCardTasksTitle.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(210)))), ((int)(((byte)(220)))));
             this.lblCardTasksTitle.Appearance.Options.UseFont = true;
             this.lblCardTasksTitle.Appearance.Options.UseForeColor = true;
             this.lblCardTasksTitle.Location = new System.Drawing.Point(15, 15);
@@ -473,7 +508,7 @@
             // lblCardTasksValue
             // 
             this.lblCardTasksValue.Appearance.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCardTasksValue.Appearance.ForeColor = System.Drawing.Color.OrangeRed;
+            this.lblCardTasksValue.Appearance.ForeColor = System.Drawing.Color.White;
             this.lblCardTasksValue.Appearance.Options.UseFont = true;
             this.lblCardTasksValue.Appearance.Options.UseForeColor = true;
             this.lblCardTasksValue.Location = new System.Drawing.Point(15, 42);
@@ -531,11 +566,14 @@
             this.pnlStudentHeaderCard.PerformLayout();
             this.tlpStudentMetricCards.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.cardStudentId)).EndInit();
-            this.cardStudentId.SuspendLayout();
+            this.cardStudentId.ResumeLayout(false);
+            this.cardStudentId.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cardStudentSection)).EndInit();
-            this.cardStudentSection.SuspendLayout();
+            this.cardStudentSection.ResumeLayout(false);
+            this.cardStudentSection.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cardStudentTasks)).EndInit();
-            this.cardStudentTasks.SuspendLayout();
+            this.cardStudentTasks.ResumeLayout(false);
+            this.cardStudentTasks.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grpStudentPhotoFrame)).EndInit();
             this.grpStudentPhotoFrame.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.peStudentProfileCanvas.Properties)).EndInit();

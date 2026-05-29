@@ -32,7 +32,7 @@
             txtBStudentId = new DevExpress.XtraEditors.TextEdit();
             txtBFirstName = new DevExpress.XtraEditors.TextEdit();
             txtBLastname = new DevExpress.XtraEditors.TextEdit();
-            txtBEmail = new DevExpress.XtraEditors.TextEdit(); // 🎯 ADDED: Email field input control
+            txtBEmail = new DevExpress.XtraEditors.TextEdit();
             cbSection = new DevExpress.XtraEditors.ComboBoxEdit();
             txtBPassword = new DevExpress.XtraEditors.TextEdit();
             Date = new DevExpress.XtraEditors.DateEdit();
@@ -43,13 +43,14 @@
             layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
             layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
-            layoutControlItemEmail = new DevExpress.XtraLayout.LayoutControlItem(); // 🎯 ADDED: Email layout layout wrapper
+            layoutControlItemEmail = new DevExpress.XtraLayout.LayoutControlItem();
             layoutControlItem4 = new DevExpress.XtraLayout.LayoutControlItem();
             layoutControlItemPassword = new DevExpress.XtraLayout.LayoutControlItem();
             layoutControlItem5 = new DevExpress.XtraLayout.LayoutControlItem();
             layoutControlItem6 = new DevExpress.XtraLayout.LayoutControlItem();
             layoutControlItem7 = new DevExpress.XtraLayout.LayoutControlItem();
             layoutControlItem8 = new DevExpress.XtraLayout.LayoutControlItem();
+            emptySpaceItem2 = new DevExpress.XtraLayout.EmptySpaceItem();
             panelControl1 = new DevExpress.XtraEditors.PanelControl();
             MainViewDashboard = new DevExpress.XtraGrid.GridControl();
             gvDashboard = new DevExpress.XtraGrid.Views.Grid.GridView();
@@ -62,12 +63,13 @@
             gridColumn6 = new DevExpress.XtraGrid.Columns.GridColumn();
             gridColumn7 = new DevExpress.XtraGrid.Columns.GridColumn();
             gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
+            emptySpaceItem1 = new DevExpress.XtraLayout.EmptySpaceItem();
             ((System.ComponentModel.ISupportInitialize)layoutControl1).BeginInit();
             layoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)txtBStudentId.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)txtBFirstName.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)txtBLastname.Properties).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)txtBEmail.Properties).BeginInit(); // 🎯 ADDED
+            ((System.ComponentModel.ISupportInitialize)txtBEmail.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)cbSection.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)txtBPassword.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)Date.Properties).BeginInit();
@@ -77,27 +79,31 @@
             ((System.ComponentModel.ISupportInitialize)layoutControlItem1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem3).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)layoutControlItemEmail).BeginInit(); // 🎯 ADDED
+            ((System.ComponentModel.ISupportInitialize)layoutControlItemEmail).BeginInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItemPassword).BeginInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem5).BeginInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem6).BeginInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem7).BeginInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem8).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)emptySpaceItem2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)panelControl1).BeginInit();
             panelControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)MainViewDashboard).BeginInit();
             ((System.ComponentModel.ISupportInitialize)gvDashboard).BeginInit();
             ((System.ComponentModel.ISupportInitialize)repositoryItemPictureEdit1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)gridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)emptySpaceItem1).BeginInit();
             SuspendLayout();
             // 
             // layoutControl1
             // 
+            layoutControl1.Appearance.Control.BackColor = System.Drawing.Color.FromArgb(30, 42, 56);
+            layoutControl1.Appearance.Control.Options.UseBackColor = true;
             layoutControl1.Controls.Add(txtBStudentId);
             layoutControl1.Controls.Add(txtBFirstName);
             layoutControl1.Controls.Add(txtBLastname);
-            layoutControl1.Controls.Add(txtBEmail); // 🎯 ADDED
+            layoutControl1.Controls.Add(txtBEmail);
             layoutControl1.Controls.Add(cbSection);
             layoutControl1.Controls.Add(txtBPassword);
             layoutControl1.Controls.Add(Date);
@@ -114,98 +120,105 @@
             // 
             // txtBStudentId
             // 
-            txtBStudentId.Location = new System.Drawing.Point(168, 24);
+            txtBStudentId.Location = new System.Drawing.Point(172, 24);
             txtBStudentId.Name = "txtBStudentId";
             txtBStudentId.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 9F);
             txtBStudentId.Properties.Appearance.Options.UseFont = true;
-            txtBStudentId.Size = new System.Drawing.Size(501, 46);
+            txtBStudentId.Size = new System.Drawing.Size(510, 46);
             txtBStudentId.StyleController = layoutControl1;
             txtBStudentId.TabIndex = 4;
             // 
             // txtBFirstName
             // 
-            txtBFirstName.Location = new System.Drawing.Point(168, 78);
+            txtBFirstName.Location = new System.Drawing.Point(172, 78);
             txtBFirstName.Name = "txtBFirstName";
             txtBFirstName.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 9F);
             txtBFirstName.Properties.Appearance.Options.UseFont = true;
-            txtBFirstName.Size = new System.Drawing.Size(501, 46);
+            txtBFirstName.Size = new System.Drawing.Size(510, 46);
             txtBFirstName.StyleController = layoutControl1;
             txtBFirstName.TabIndex = 5;
             // 
             // txtBLastname
             // 
-            txtBLastname.Location = new System.Drawing.Point(168, 132);
+            txtBLastname.Location = new System.Drawing.Point(172, 132);
             txtBLastname.Name = "txtBLastname";
             txtBLastname.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 9F);
             txtBLastname.Properties.Appearance.Options.UseFont = true;
-            txtBLastname.Size = new System.Drawing.Size(501, 46);
+            txtBLastname.Size = new System.Drawing.Size(510, 46);
             txtBLastname.StyleController = layoutControl1;
             txtBLastname.TabIndex = 6;
             // 
             // txtBEmail
             // 
-            txtBEmail.Location = new System.Drawing.Point(168, 186);
+            txtBEmail.Location = new System.Drawing.Point(172, 186);
             txtBEmail.Name = "txtBEmail";
             txtBEmail.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 9F);
             txtBEmail.Properties.Appearance.Options.UseFont = true;
-            txtBEmail.Size = new System.Drawing.Size(501, 46);
+            txtBEmail.Size = new System.Drawing.Size(510, 46);
             txtBEmail.StyleController = layoutControl1;
             txtBEmail.TabIndex = 13;
             // 
             // cbSection
             // 
-            cbSection.Location = new System.Drawing.Point(168, 240);
+            cbSection.Location = new System.Drawing.Point(172, 240);
             cbSection.Name = "cbSection";
             cbSection.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 9F);
             cbSection.Properties.Appearance.Options.UseFont = true;
             cbSection.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
             cbSection.Properties.Items.AddRange(new object[] { "NEUMANN", "AIKEN" });
             cbSection.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            cbSection.Size = new System.Drawing.Size(501, 46);
+            cbSection.Size = new System.Drawing.Size(510, 46);
             cbSection.StyleController = layoutControl1;
             cbSection.TabIndex = 7;
             // 
             // txtBPassword
             // 
-            txtBPassword.Location = new System.Drawing.Point(168, 294);
+            txtBPassword.Location = new System.Drawing.Point(172, 294);
             txtBPassword.Name = "txtBPassword";
             txtBPassword.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 9F);
             txtBPassword.Properties.Appearance.Options.UseFont = true;
             txtBPassword.Properties.UseSystemPasswordChar = true;
-            txtBPassword.Size = new System.Drawing.Size(501, 46);
+            txtBPassword.Size = new System.Drawing.Size(510, 46);
             txtBPassword.StyleController = layoutControl1;
             txtBPassword.TabIndex = 12;
             // 
             // Date
             // 
             Date.EditValue = null;
-            Date.Location = new System.Drawing.Point(168, 348);
+            Date.Location = new System.Drawing.Point(172, 348);
             Date.Name = "Date";
             Date.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 9F);
             Date.Properties.Appearance.Options.UseFont = true;
             Date.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
             Date.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
-            Date.Size = new System.Drawing.Size(501, 46);
+            Date.Size = new System.Drawing.Size(510, 46);
             Date.StyleController = layoutControl1;
             Date.TabIndex = 8;
             // 
             // PicBox
             // 
-            PicBox.Location = new System.Drawing.Point(168, 402);
+            PicBox.Location = new System.Drawing.Point(172, 402);
             PicBox.Name = "PicBox";
+            PicBox.Properties.Appearance.BackColor = System.Drawing.Color.FromArgb(42, 58, 76);
+            PicBox.Properties.Appearance.Options.UseBackColor = true;
             PicBox.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Simple;
-            PicBox.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Stretch;
-            PicBox.Size = new System.Drawing.Size(501, 822);
+            PicBox.Properties.OptionsMask.MaskType = DevExpress.XtraEditors.Controls.PictureEditMaskType.Circle;
+            PicBox.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Squeeze;
+            PicBox.Size = new System.Drawing.Size(500, 340);
             PicBox.StyleController = layoutControl1;
             PicBox.TabIndex = 9;
             // 
             // btnUpload
             // 
-            btnUpload.Appearance.Font = new System.Drawing.Font("Segoe UI", 9F);
+            btnUpload.Appearance.BackColor = System.Drawing.Color.FromArgb(52, 73, 94);
+            btnUpload.Appearance.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            btnUpload.Appearance.ForeColor = System.Drawing.Color.FromArgb(220, 225, 230);
+            btnUpload.Appearance.Options.UseBackColor = true;
             btnUpload.Appearance.Options.UseFont = true;
-            btnUpload.Location = new System.Drawing.Point(168, 1232);
+            btnUpload.Appearance.Options.UseForeColor = true;
+            btnUpload.Location = new System.Drawing.Point(172, 750);
             btnUpload.Name = "btnUpload";
-            btnUpload.Size = new System.Drawing.Size(501, 44);
+            btnUpload.Size = new System.Drawing.Size(500, 100);
             btnUpload.StyleController = layoutControl1;
             btnUpload.TabIndex = 10;
             btnUpload.Text = "Choose Image...";
@@ -213,11 +226,15 @@
             // 
             // btnRegister
             // 
+            btnRegister.Appearance.BackColor = System.Drawing.Color.FromArgb(42, 63, 84);
             btnRegister.Appearance.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            btnRegister.Appearance.ForeColor = System.Drawing.Color.White;
+            btnRegister.Appearance.Options.UseBackColor = true;
             btnRegister.Appearance.Options.UseFont = true;
-            btnRegister.Location = new System.Drawing.Point(24, 1284);
+            btnRegister.Appearance.Options.UseForeColor = true;
+            btnRegister.Location = new System.Drawing.Point(24, 1250);
             btnRegister.Name = "btnRegister";
-            btnRegister.Size = new System.Drawing.Size(645, 46);
+            btnRegister.Size = new System.Drawing.Size(658, 46);
             btnRegister.StyleController = layoutControl1;
             btnRegister.TabIndex = 11;
             btnRegister.Text = "Register Account";
@@ -225,120 +242,157 @@
             // 
             // Root
             // 
+            Root.AppearanceGroup.BackColor = System.Drawing.Color.FromArgb(26, 36, 48);
+            Root.AppearanceGroup.Options.UseBackColor = true;
             Root.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
             Root.GroupBordersVisible = false;
-            Root.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] { layoutControlItem1, layoutControlItem2, layoutControlItem3, layoutControlItemEmail, layoutControlItem4, layoutControlItemPassword, layoutControlItem5, layoutControlItem6, layoutControlItem7, layoutControlItem8 });
+            Root.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] { layoutControlItem1, layoutControlItem2, layoutControlItem3, layoutControlItemEmail, layoutControlItem4, layoutControlItemPassword, layoutControlItem5, layoutControlItem6, layoutControlItem7, layoutControlItem8, emptySpaceItem1, emptySpaceItem2 });
             Root.Name = "Root";
-            Root.Size = new System.Drawing.Size(693, 1354);
+            Root.Size = new System.Drawing.Size(706, 1320);
             Root.TextVisible = false;
             // 
             // layoutControlItem1
             // 
-            layoutControlItem1.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI", 9F);
+            layoutControlItem1.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            layoutControlItem1.AppearanceItemCaption.ForeColor = System.Drawing.Color.FromArgb(210, 215, 225);
             layoutControlItem1.AppearanceItemCaption.Options.UseFont = true;
+            layoutControlItem1.AppearanceItemCaption.Options.UseForeColor = true;
             layoutControlItem1.Control = txtBStudentId;
             layoutControlItem1.Location = new System.Drawing.Point(0, 0);
             layoutControlItem1.Name = "layoutControlItem1";
-            layoutControlItem1.Size = new System.Drawing.Size(653, 54);
+            layoutControlItem1.Size = new System.Drawing.Size(666, 54);
             layoutControlItem1.Text = "Student ID:";
-            layoutControlItem1.TextSize = new System.Drawing.Size(120, 32);
+            layoutControlItem1.TextSize = new System.Drawing.Size(124, 32);
             // 
             // layoutControlItem2
             // 
-            layoutControlItem2.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI", 9F);
+            layoutControlItem2.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            layoutControlItem2.AppearanceItemCaption.ForeColor = System.Drawing.Color.FromArgb(210, 215, 225);
             layoutControlItem2.AppearanceItemCaption.Options.UseFont = true;
+            layoutControlItem2.AppearanceItemCaption.Options.UseForeColor = true;
             layoutControlItem2.Control = txtBFirstName;
             layoutControlItem2.Location = new System.Drawing.Point(0, 54);
             layoutControlItem2.Name = "layoutControlItem2";
-            layoutControlItem2.Size = new System.Drawing.Size(653, 54);
+            layoutControlItem2.Size = new System.Drawing.Size(666, 54);
             layoutControlItem2.Text = "First Name:";
-            layoutControlItem2.TextSize = new System.Drawing.Size(120, 32);
+            layoutControlItem2.TextSize = new System.Drawing.Size(124, 32);
             // 
             // layoutControlItem3
             // 
-            layoutControlItem3.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI", 9F);
+            layoutControlItem3.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            layoutControlItem3.AppearanceItemCaption.ForeColor = System.Drawing.Color.FromArgb(210, 215, 225);
             layoutControlItem3.AppearanceItemCaption.Options.UseFont = true;
+            layoutControlItem3.AppearanceItemCaption.Options.UseForeColor = true;
             layoutControlItem3.Control = txtBLastname;
             layoutControlItem3.Location = new System.Drawing.Point(0, 108);
             layoutControlItem3.Name = "layoutControlItem3";
-            layoutControlItem3.Size = new System.Drawing.Size(653, 54);
+            layoutControlItem3.Size = new System.Drawing.Size(666, 54);
             layoutControlItem3.Text = "Last Name:";
-            layoutControlItem3.TextSize = new System.Drawing.Size(120, 32);
+            layoutControlItem3.TextSize = new System.Drawing.Size(124, 32);
             // 
             // layoutControlItemEmail
             // 
-            layoutControlItemEmail.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI", 9F);
+            layoutControlItemEmail.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            layoutControlItemEmail.AppearanceItemCaption.ForeColor = System.Drawing.Color.FromArgb(210, 215, 225);
             layoutControlItemEmail.AppearanceItemCaption.Options.UseFont = true;
+            layoutControlItemEmail.AppearanceItemCaption.Options.UseForeColor = true;
             layoutControlItemEmail.Control = txtBEmail;
             layoutControlItemEmail.Location = new System.Drawing.Point(0, 162);
             layoutControlItemEmail.Name = "layoutControlItemEmail";
-            layoutControlItemEmail.Size = new System.Drawing.Size(653, 54);
+            layoutControlItemEmail.Size = new System.Drawing.Size(666, 54);
             layoutControlItemEmail.Text = "Email:";
-            layoutControlItemEmail.TextSize = new System.Drawing.Size(120, 32);
+            layoutControlItemEmail.TextSize = new System.Drawing.Size(124, 32);
             // 
             // layoutControlItem4
             // 
-            layoutControlItem4.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI", 9F);
+            layoutControlItem4.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            layoutControlItem4.AppearanceItemCaption.ForeColor = System.Drawing.Color.FromArgb(210, 215, 225);
             layoutControlItem4.AppearanceItemCaption.Options.UseFont = true;
+            layoutControlItem4.AppearanceItemCaption.Options.UseForeColor = true;
             layoutControlItem4.Control = cbSection;
             layoutControlItem4.Location = new System.Drawing.Point(0, 216);
             layoutControlItem4.Name = "layoutControlItem4";
-            layoutControlItem4.Size = new System.Drawing.Size(653, 54);
+            layoutControlItem4.Size = new System.Drawing.Size(666, 54);
             layoutControlItem4.Text = "Section:";
-            layoutControlItem4.TextSize = new System.Drawing.Size(120, 32);
+            layoutControlItem4.TextSize = new System.Drawing.Size(124, 32);
             // 
             // layoutControlItemPassword
             // 
-            layoutControlItemPassword.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI", 9F);
+            layoutControlItemPassword.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            layoutControlItemPassword.AppearanceItemCaption.ForeColor = System.Drawing.Color.FromArgb(210, 215, 225);
             layoutControlItemPassword.AppearanceItemCaption.Options.UseFont = true;
+            layoutControlItemPassword.AppearanceItemCaption.Options.UseForeColor = true;
             layoutControlItemPassword.Control = txtBPassword;
             layoutControlItemPassword.Location = new System.Drawing.Point(0, 270);
             layoutControlItemPassword.Name = "layoutControlItemPassword";
-            layoutControlItemPassword.Size = new System.Drawing.Size(653, 54);
+            layoutControlItemPassword.Size = new System.Drawing.Size(666, 54);
             layoutControlItemPassword.Text = "Password:";
-            layoutControlItemPassword.TextSize = new System.Drawing.Size(120, 32);
+            layoutControlItemPassword.TextSize = new System.Drawing.Size(124, 32);
             // 
             // layoutControlItem5
             // 
-            layoutControlItem5.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI", 9F);
+            layoutControlItem5.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            layoutControlItem5.AppearanceItemCaption.ForeColor = System.Drawing.Color.FromArgb(210, 215, 225);
             layoutControlItem5.AppearanceItemCaption.Options.UseFont = true;
+            layoutControlItem5.AppearanceItemCaption.Options.UseForeColor = true;
             layoutControlItem5.Control = Date;
             layoutControlItem5.Location = new System.Drawing.Point(0, 324);
             layoutControlItem5.Name = "layoutControlItem5";
-            layoutControlItem5.Size = new System.Drawing.Size(653, 54);
+            layoutControlItem5.Size = new System.Drawing.Size(666, 54);
             layoutControlItem5.Text = "Date:";
-            layoutControlItem5.TextSize = new System.Drawing.Size(120, 32);
+            layoutControlItem5.TextSize = new System.Drawing.Size(124, 32);
             // 
             // layoutControlItem6
             // 
-            layoutControlItem6.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI", 9F);
+            layoutControlItem6.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            layoutControlItem6.AppearanceItemCaption.ForeColor = System.Drawing.Color.FromArgb(210, 215, 225);
             layoutControlItem6.AppearanceItemCaption.Options.UseFont = true;
+            layoutControlItem6.AppearanceItemCaption.Options.UseForeColor = true;
             layoutControlItem6.Control = PicBox;
             layoutControlItem6.Location = new System.Drawing.Point(0, 378);
+            layoutControlItem6.MaxSize = new System.Drawing.Size(656, 348);
+            layoutControlItem6.MinSize = new System.Drawing.Size(656, 348);
             layoutControlItem6.Name = "layoutControlItem6";
-            layoutControlItem6.Size = new System.Drawing.Size(653, 830);
+            layoutControlItem6.Size = new System.Drawing.Size(656, 348);
+            layoutControlItem6.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
             layoutControlItem6.Text = "Image:";
-            layoutControlItem6.TextSize = new System.Drawing.Size(120, 32);
+            layoutControlItem6.TextSize = new System.Drawing.Size(124, 32);
             // 
             // layoutControlItem7
             // 
+            layoutControlItem7.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            layoutControlItem7.AppearanceItemCaption.ForeColor = System.Drawing.Color.FromArgb(210, 215, 225);
+            layoutControlItem7.AppearanceItemCaption.Options.UseFont = true;
+            layoutControlItem7.AppearanceItemCaption.Options.UseForeColor = true;
             layoutControlItem7.Control = btnUpload;
-            layoutControlItem7.Location = new System.Drawing.Point(0, 1208);
+            layoutControlItem7.Location = new System.Drawing.Point(0, 726);
+            layoutControlItem7.MaxSize = new System.Drawing.Size(656, 108);
+            layoutControlItem7.MinSize = new System.Drawing.Size(656, 108);
             layoutControlItem7.Name = "layoutControlItem7";
-            layoutControlItem7.Size = new System.Drawing.Size(653, 52);
+            layoutControlItem7.Size = new System.Drawing.Size(656, 108);
+            layoutControlItem7.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
             layoutControlItem7.Text = " ";
-            layoutControlItem7.TextSize = new System.Drawing.Size(120, 25);
+            layoutControlItem7.TextSize = new System.Drawing.Size(124, 32);
             // 
             // layoutControlItem8
             // 
             layoutControlItem8.Control = btnRegister;
-            layoutControlItem8.Location = new System.Drawing.Point(0, 1260);
+            layoutControlItem8.Location = new System.Drawing.Point(0, 1226);
             layoutControlItem8.Name = "layoutControlItem8";
-            layoutControlItem8.Size = new System.Drawing.Size(653, 54);
+            layoutControlItem8.Size = new System.Drawing.Size(666, 54);
             layoutControlItem8.TextVisible = false;
+            // 
+            // emptySpaceItem2
+            // 
+            emptySpaceItem2.Location = new System.Drawing.Point(656, 378);
+            emptySpaceItem2.Name = "emptySpaceItem2";
+            emptySpaceItem2.Size = new System.Drawing.Size(10, 456);
             // 
             // panelControl1
             // 
+            panelControl1.Appearance.BackColor = System.Drawing.Color.FromArgb(22, 32, 44);
+            panelControl1.Appearance.Options.UseBackColor = true;
+            panelControl1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             panelControl1.Controls.Add(MainViewDashboard);
             panelControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             panelControl1.Location = new System.Drawing.Point(693, 0);
@@ -351,12 +405,12 @@
             // 
             MainViewDashboard.Dock = System.Windows.Forms.DockStyle.Fill;
             MainViewDashboard.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
-            MainViewDashboard.Location = new System.Drawing.Point(3, 3);
+            MainViewDashboard.Location = new System.Drawing.Point(0, 0);
             MainViewDashboard.MainView = gvDashboard;
             MainViewDashboard.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             MainViewDashboard.Name = "MainViewDashboard";
             MainViewDashboard.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { repositoryItemPictureEdit1 });
-            MainViewDashboard.Size = new System.Drawing.Size(1143, 1348);
+            MainViewDashboard.Size = new System.Drawing.Size(1149, 1354);
             MainViewDashboard.TabIndex = 0;
             MainViewDashboard.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gvDashboard, gridView1 });
             // 
@@ -452,6 +506,12 @@
             gridView1.Name = "gridView1";
             gridView1.OptionsEditForm.PopupEditFormWidth = 1733;
             // 
+            // emptySpaceItem1
+            // 
+            emptySpaceItem1.Location = new System.Drawing.Point(0, 834);
+            emptySpaceItem1.Name = "emptySpaceItem1";
+            emptySpaceItem1.Size = new System.Drawing.Size(666, 392);
+            // 
             // RegisterDashboardUC
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
@@ -466,7 +526,7 @@
             ((System.ComponentModel.ISupportInitialize)txtBStudentId.Properties).EndInit();
             ((System.ComponentModel.ISupportInitialize)txtBFirstName.Properties).EndInit();
             ((System.ComponentModel.ISupportInitialize)txtBLastname.Properties).EndInit();
-            ((System.ComponentModel.ISupportInitialize)txtBEmail.Properties).EndInit(); // 🎯 ADDED
+            ((System.ComponentModel.ISupportInitialize)txtBEmail.Properties).EndInit();
             ((System.ComponentModel.ISupportInitialize)cbSection.Properties).EndInit();
             ((System.ComponentModel.ISupportInitialize)txtBPassword.Properties).EndInit();
             ((System.ComponentModel.ISupportInitialize)Date.Properties.CalendarTimeProperties).EndInit();
@@ -476,19 +536,21 @@
             ((System.ComponentModel.ISupportInitialize)layoutControlItem1).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem2).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem3).EndInit();
-            ((System.ComponentModel.ISupportInitialize)layoutControlItemEmail).EndInit(); // 🎯 ADDED
+            ((System.ComponentModel.ISupportInitialize)layoutControlItemEmail).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem4).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItemPassword).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem5).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem6).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem7).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem8).EndInit();
+            ((System.ComponentModel.ISupportInitialize)emptySpaceItem2).EndInit();
             ((System.ComponentModel.ISupportInitialize)panelControl1).EndInit();
             panelControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)MainViewDashboard).EndInit();
             ((System.ComponentModel.ISupportInitialize)gvDashboard).EndInit();
             ((System.ComponentModel.ISupportInitialize)repositoryItemPictureEdit1).EndInit();
             ((System.ComponentModel.ISupportInitialize)gridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)emptySpaceItem1).EndInit();
             ResumeLayout(false);
         }
 
@@ -502,8 +564,8 @@
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem2;
         private DevExpress.XtraEditors.TextEdit txtBLastname;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem3;
-        private DevExpress.XtraEditors.TextEdit txtBEmail; // 🎯 ADDED
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemEmail; // 🎯 ADDED
+        private DevExpress.XtraEditors.TextEdit txtBEmail;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemEmail;
         private DevExpress.XtraEditors.ComboBoxEdit cbSection;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem4;
         private DevExpress.XtraEditors.TextEdit txtBPassword;
@@ -528,5 +590,7 @@
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn6;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn7;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
+        private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem2;
+        private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem1;
     }
 }

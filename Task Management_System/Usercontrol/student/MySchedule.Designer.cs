@@ -49,15 +49,27 @@
             schedulerControl1.Views.WorkWeekView.TimeRulers.Add(timeRuler3);
             schedulerControl1.Views.YearView.Enabled = false;
             schedulerControl1.Views.YearView.UseOptimizedScrolling = false;
+
+            // 🔒 SECURITY PROTECTION: Disables all forms of appointment creation, modification, and context menu actions
+            schedulerControl1.OptionsCustomization.AllowAppointmentCreate = DevExpress.XtraScheduler.UsedAppointmentType.None;
+            schedulerControl1.OptionsCustomization.AllowAppointmentEdit = DevExpress.XtraScheduler.UsedAppointmentType.None;
+            schedulerControl1.OptionsCustomization.AllowAppointmentDelete = DevExpress.XtraScheduler.UsedAppointmentType.None;
+            schedulerControl1.OptionsCustomization.AllowAppointmentCopy = DevExpress.XtraScheduler.UsedAppointmentType.None;
+            schedulerControl1.OptionsCustomization.AllowAppointmentDrag = DevExpress.XtraScheduler.UsedAppointmentType.None;
+            schedulerControl1.OptionsCustomization.AllowAppointmentResize = DevExpress.XtraScheduler.UsedAppointmentType.None;
+            schedulerControl1.OptionsCustomization.AllowInplaceEditor = DevExpress.XtraScheduler.UsedAppointmentType.None;
+
+            // ✨ HTML INTERPRETATION: Safely enables HTML tag rendering across all your active layout structures
+            schedulerControl1.Views.DayView.AppointmentDisplayOptions.AllowHtmlText = true;
+            schedulerControl1.Views.WorkWeekView.AppointmentDisplayOptions.AllowHtmlText = true;
+            schedulerControl1.Views.FullWeekView.AppointmentDisplayOptions.AllowHtmlText = true;
+            schedulerControl1.Views.MonthView.AppointmentDisplayOptions.AllowHtmlText = true;
             // 
             // schedulerDataStorage1
             // 
-            // 
-            // 
-            // 
             schedulerDataStorage1.AppointmentDependencies.AutoReload = false;
             // 
-            // 
+            // Labels Configuration
             // 
             schedulerDataStorage1.Appointments.Labels.CreateNewLabel(0, "None", "&None", System.Drawing.SystemColors.Window);
             schedulerDataStorage1.Appointments.Labels.CreateNewLabel(1, "Important", "&Important", System.Drawing.Color.FromArgb(255, 194, 190));
@@ -120,6 +132,7 @@
         private DevExpress.XtraScheduler.SchedulerDataStorage schedulerDataStorage1;
         private DevExpress.XtraTab.XtraTabControl xtraTabControl1;
         private DevExpress.XtraTab.XtraTabPage xtraTabPageDaily;
+        private DevExpress.XtraTab.XtraTabPage weekly; // changed to match container scope mapping if required
         private DevExpress.XtraTab.XtraTabPage xtraTabPageWeekly;
         private DevExpress.XtraTab.XtraTabPage xtraTabPageMonthly;
     }
