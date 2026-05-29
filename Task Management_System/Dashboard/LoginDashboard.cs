@@ -9,27 +9,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Task_Management_System.Dashboards;
 using Task_Management_System.Data;
 using Task_Management_System.Models;
 
 namespace Task_Management_System.Dashboard
 {
-    // ✅ SUCCESS: LoginDashboard is now the FIRST class declared in the file.
-    // The Visual Studio WinForms designer will now open instantly without issues.
     public partial class LoginDashboard : DevExpress.XtraEditors.XtraForm
     {
-        // Keep your original database manager instance intact
-        DataBase db = new DataBase();
-
         public LoginDashboard()
         {
             InitializeComponent();
+
+            // Enforce and validate database schema integrity immediately on startup
+            try
+            {
+                DatabaseContext.InitializeDatabaseSchema();
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show($"Database Diagnostics Failure: {ex.Message}", "Initialization Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            // Matches your designer inputs perfectly
             string username = txtStudentId.Text.Trim();
             string password = txtPassword.Text;
 
@@ -39,37 +42,99 @@ namespace Task_Management_System.Dashboard
                 return;
             }
 
-            using (SqliteConnection con = db.GetConnection())
+            using (var con = (SqliteConnection)DatabaseContext.CreateConnection())
             {
                 try
                 {
-                    con.Open();
+                    if (con.State != ConnectionState.Open) con.Open();
 
                     // =================================================================
-                    // 🎯 FIXED PIPELINE: Check the correct 'Users' table instead of 'User'
+                    // 🎯 PIPELINE 1: Check the primary 'Admin' master registry table
                     // =================================================================
-                    string loginQuery = @"SELECT * FROM Users 
-                                          WHERE Username = @Username 
-                                          AND Password = @Password";
+                    string adminQuery = @"SELECT Student_Id, FirstName, LastName, Section, picture, Password, Date 
+                                          FROM Admin 
+                                          WHERE Student_Id = @StudentId 
+                                          AND Password = @Password 
+                                          LIMIT 1;";
 
-                    using (SqliteCommand loginCommand = new SqliteCommand(loginQuery, con))
+                    using (SqliteCommand adminCommand = new SqliteCommand(adminQuery, con))
                     {
-                        loginCommand.Parameters.AddWithValue("@Username", username);
-                        loginCommand.Parameters.AddWithValue("@Password", password);
+                        adminCommand.Parameters.AddWithValue("@StudentId", username);
+                        adminCommand.Parameters.AddWithValue("@Password", password);
 
-                        using (SqliteDataReader loginReader = loginCommand.ExecuteReader())
+                        using (SqliteDataReader reader = adminCommand.ExecuteReader())
                         {
-                            if (loginReader.Read())
+                            if (reader.Read())
                             {
-                                // Route to the appropriate dashboard based on whether they are an Admin or Student
-                                if (username.ToLower() == "admin")
+                                // 👑 CASE 1: Check if this registration matches an Admin role override
+                                if (username.Equals("admin", StringComparison.OrdinalIgnoreCase))
                                 {
                                     UserSession.CurrentUserRole = "Admin";
-                                    UserSession.CurrentStudentId = "STU-2026-0001"; // Administrative fallback ID
+                                    UserSession.CurrentStudentId = "STU-2026-0001";
+                                    global::Task_Management_System.Data.SessionContext.ActiveStudentId = "STU-2026-0001";
 
                                     XtraMessageBox.Show("Login Successful! Welcome to the Admin panel.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                                    AdminDashboard adminDashboard = new AdminDashboard(username);
+                                    global::Task_Management_System.Dashboards.AdminDashboard adminDashboard = new global::Task_Management_System.Dashboards.AdminDashboard(username);
+                                    adminDashboard.Show();
+                                    this.Hide();
+                                    return;
+                                }
+                                // 🎓 CASE 2: Regular Student found inside the Admin registration schema
+                                else
+                                {
+                                    UserSession.CurrentUserRole = "Student";
+                                    UserSession.CurrentStudentId = reader["Student_Id"].ToString();
+                                    global::Task_Management_System.Data.SessionContext.ActiveStudentId = reader["Student_Id"].ToString();
+
+                                    // Build the dynamic payload directly from the database record row bounds
+                                    dynamic studentProfile = new System.Dynamic.ExpandoObject();
+                                    var profileDict = (IDictionary<string, object>)studentProfile;
+                                    profileDict["Student_Id"] = reader["Student_Id"].ToString();
+                                    profileDict["FirstName"] = reader["FirstName"].ToString();
+                                    profileDict["LastName"] = reader["LastName"].ToString();
+                                    profileDict["Section"] = reader["Section"].ToString();
+                                    profileDict["picture"] = reader["picture"] != DBNull.Value ? (byte[])reader["picture"] : null;
+                                    profileDict["Date"] = reader["Date"].ToString();
+
+                                    XtraMessageBox.Show($"Login Successful! Welcome Student {username}.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                                    // Pass the payload right into the dynamic argument constructor parameter cleanly
+                                    global::Task_Management_System.Dashboard.StudentDashboard studentDashboard = new global::Task_Management_System.Dashboard.StudentDashboard(studentProfile);
+                                    studentDashboard.Show();
+                                    this.Hide();
+                                    return;
+                                }
+                            }
+                        }
+                    }
+
+                    // =================================================================
+                    // 🎯 PIPELINE 2: Fallback check against legacy 'Users' table
+                    // =================================================================
+                    string fallbackUserQuery = @"SELECT Username, Password FROM Users 
+                                                 WHERE Username LIKE @Username 
+                                                 AND Password = @Password 
+                                                 LIMIT 1;";
+
+                    using (SqliteCommand userCommand = new SqliteCommand(fallbackUserQuery, con))
+                    {
+                        userCommand.Parameters.AddWithValue("@Username", username);
+                        userCommand.Parameters.AddWithValue("@Password", password);
+
+                        using (SqliteDataReader userReader = userCommand.ExecuteReader())
+                        {
+                            if (userReader.Read())
+                            {
+                                if (username.Equals("admin", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    UserSession.CurrentUserRole = "Admin";
+                                    UserSession.CurrentStudentId = "STU-2026-0001";
+                                    global::Task_Management_System.Data.SessionContext.ActiveStudentId = "STU-2026-0001";
+
+                                    XtraMessageBox.Show("Login Successful! Welcome to the Admin panel.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                                    global::Task_Management_System.Dashboards.AdminDashboard adminDashboard = new global::Task_Management_System.Dashboards.AdminDashboard(username);
                                     adminDashboard.Show();
                                     this.Hide();
                                 }
@@ -77,40 +142,23 @@ namespace Task_Management_System.Dashboard
                                 {
                                     UserSession.CurrentUserRole = "Student";
                                     UserSession.CurrentStudentId = username;
+                                    global::Task_Management_System.Data.SessionContext.ActiveStudentId = username;
+
+                                    // Build basic fallback profile structure block
+                                    dynamic studentProfile = new System.Dynamic.ExpandoObject();
+                                    var profileDict = (IDictionary<string, object>)studentProfile;
+                                    profileDict["Student_Id"] = username;
+                                    profileDict["FirstName"] = username;
+                                    profileDict["LastName"] = "";
+                                    profileDict["Section"] = "N/A";
+                                    profileDict["picture"] = null;
 
                                     XtraMessageBox.Show($"Login Successful! Welcome Student {username}.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                                    StudentDashboard studentDashboard = new StudentDashboard();
+                                    global::Task_Management_System.Dashboard.StudentDashboard studentDashboard = new global::Task_Management_System.Dashboard.StudentDashboard(studentProfile);
                                     studentDashboard.Show();
                                     this.Hide();
                                 }
-                                return;
-                            }
-                        }
-                    }
-
-                    // Fallback to check the 'Students' table directly in case passwords match PasswordHash directly
-                    string studentFallbackQuery = @"SELECT * FROM Students 
-                                                    WHERE StudentId = @StudentId 
-                                                    AND PasswordHash = @Password";
-
-                    using (SqliteCommand fallbackCommand = new SqliteCommand(studentFallbackQuery, con))
-                    {
-                        fallbackCommand.Parameters.AddWithValue("@StudentId", username);
-                        fallbackCommand.Parameters.AddWithValue("@Password", password);
-
-                        using (SqliteDataReader fallbackReader = fallbackCommand.ExecuteReader())
-                        {
-                            if (fallbackReader.Read())
-                            {
-                                UserSession.CurrentUserRole = "Student";
-                                UserSession.CurrentStudentId = username;
-
-                                XtraMessageBox.Show($"Login Successful! Welcome Student {username}.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                                StudentDashboard studentDashboard = new StudentDashboard();
-                                studentDashboard.Show();
-                                this.Hide();
                                 return;
                             }
                         }
@@ -127,17 +175,12 @@ namespace Task_Management_System.Dashboard
 
         private void chkShowPassword_CheckedChanged(object sender, EventArgs e)
         {
-            // Toggles the System Password character masking behavior dynamically based on control checked state
             txtPassword.Properties.UseSystemPasswordChar = !chkShowPassword.Checked;
         }
 
-        /// <summary>
-        /// Event handler for the Cancel button click event.
-        /// </summary>
         private void btnCancel_Click(object sender, EventArgs e)
         {
             DialogResult result = XtraMessageBox.Show("Are you sure you want to close the Task Management System?", "Exit Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
             if (result == DialogResult.Yes)
             {
                 Application.Exit();

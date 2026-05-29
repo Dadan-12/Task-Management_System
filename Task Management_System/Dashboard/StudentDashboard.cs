@@ -2,36 +2,41 @@
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using DevExpress.XtraBars.Navigation;
-using Task_Management_System.Usercontrol.student;
+using System.Threading.Tasks;
+
+using StudentControls = Task_Management_System.Usercontrol.student;
 
 namespace Task_Management_System.Dashboard
 {
-    public partial class StudentDashboard : DevExpress.XtraEditors.XtraForm
+    public partial class StudentDashboard : XtraForm
     {
-        // View Component Fields for UI Component Caching Strategy
-        private StudentDashboardOverview _overviewControl;
-        private MySchedule _scheduleControl;
-        private TaskScheduler _taskSchedulerControl;
-        private Profile _profileControl;
+        // 📍 FIELD STACK: Cached backing subview references to preserve cross-session states
+        private StudentControls.StudentDashboardOverview _overviewControl;
+        private StudentControls.MySchedule _scheduleControl;
+        private StudentControls.MyClassSchedule _classScheduleControl;
+        private StudentControls.TaskScheduler _taskSchedulerControl;
+        private StudentControls.Profile _profileControl;
 
-        public StudentDashboard()
+        private readonly dynamic _loggedStudentProfile;
+
+        public StudentDashboard(dynamic studentProfile)
         {
             InitializeComponent();
+
+            _loggedStudentProfile = studentProfile;
+
             RegisterNavigationPipelineEvents();
 
-            // FIX: Ensure the master layout panel handles over-sized controls gracefully by showing scrollbars
             if (mainContentContainer != null)
             {
                 mainContentContainer.AutoScroll = true;
             }
 
-            // Set the first dashboard component active by default on launch
             NavigationPipelineRoute(accordionControlElementDashboard);
         }
 
         private void RegisterNavigationPipelineEvents()
         {
-            // Connect Hamburger Action Clicks directly to the workspace router
             accordionControl1.ElementClick += (sender, args) =>
             {
                 if (args.Element != null)
@@ -41,12 +46,12 @@ namespace Task_Management_System.Dashboard
             };
         }
 
-        /// <summary>
-        /// Orchestrates rendering targets and structural swaps into the central view canvas.
-        /// </summary>
+        private void accordionControlElementClassSchedule_Click(object sender, EventArgs e) => 
+            NavigationPipelineRoute(accordionControlElementClassSchedule);
+
+        // 📍 ROUTER PIPELINE: Switches active workspaces on the panel canvas container dynamically
         private async void NavigationPipelineRoute(AccordionControlElement targetingElement)
         {
-            // 🚪 INTERCEPT LOGOUT SELECTION IMMEDIATELY
             if (targetingElement == accordionControlElementLogout)
             {
                 ExecuteUserLogoutPipeline();
@@ -57,29 +62,36 @@ namespace Task_Management_System.Dashboard
 
             if (targetingElement == accordionControlElementDashboard)
             {
-                if (_overviewControl == null) _overviewControl = new StudentDashboardOverview();
-                targetedViewControl = _overviewControl;
+                targetedViewControl = _overviewControl ??= new StudentControls.StudentDashboardOverview();
             }
             else if (targetingElement == accordionControlElementSchedule)
             {
-                if (_scheduleControl == null) _scheduleControl = new MySchedule();
-                targetedViewControl = _scheduleControl;
-
-                // 🔄 SYNC REFRESH: Force MySchedule to fetch assignments added or altered inside TaskScheduler
+                targetedViewControl = _scheduleControl ??= new StudentControls.MySchedule();
                 await _scheduleControl.InitializeAndLoadCalendarDataAsync();
+            }
+            else if (targetingElement == accordionControlElementClassSchedule)
+            {
+                targetedViewControl = _classScheduleControl ??= new StudentControls.MyClassSchedule();
+
+                if (_classScheduleControl.HasMethod("LoadClassSchedulesAsync"))
+                {
+                    dynamic dynamicControl = _classScheduleControl;
+                    await dynamicControl.LoadClassSchedulesAsync(_loggedStudentProfile);
+                }
             }
             else if (targetingElement == accordionControlElementTasks)
             {
-                if (_taskSchedulerControl == null) _taskSchedulerControl = new TaskScheduler();
-                targetedViewControl = _taskSchedulerControl;
-
-                // 🔄 SYNC REFRESH: Force TaskScheduler to fetch details added or altered inside MySchedule
+                targetedViewControl = _taskSchedulerControl ??= new StudentControls.TaskScheduler();
                 await _taskSchedulerControl.LoadSchedulerDataAsync();
             }
             else if (targetingElement == accordionControlElementProfile)
             {
-                if (_profileControl == null) _profileControl = new Profile();
-                targetedViewControl = _profileControl;
+                targetedViewControl = _profileControl ??= new StudentControls.Profile();
+
+                if (_loggedStudentProfile != null && _profileControl.HasMethod("InitializeProfileData"))
+                {
+                    ((dynamic)_profileControl).InitializeProfileData(_loggedStudentProfile);
+                }
             }
 
             if (targetedViewControl != null)
@@ -88,9 +100,6 @@ namespace Task_Management_System.Dashboard
             }
         }
 
-        /// <summary>
-        /// Prompts a user confirmation dialog and securely redirects visibility context back out to the app login display.
-        /// </summary>
         private void ExecuteUserLogoutPipeline()
         {
             var dialogResult = XtraMessageBox.Show(
@@ -101,54 +110,43 @@ namespace Task_Management_System.Dashboard
                 MessageBoxIcon.Question
             );
 
-            if (dialogResult == DialogResult.Yes)
+            if (dialogResult != DialogResult.Yes) return;
+
+            Form loginFormTarget = Application.OpenForms["LoginDashboard"];
+
+            if (loginFormTarget != null)
             {
-                // Restore visibility to your existing background instance of LoginDashboard
-                Form loginFormTarget = Application.OpenForms["LoginDashboard"] ?? Application.OpenForms["LoginDashboardcs"];
-
-                if (loginFormTarget != null)
-                {
-                    loginFormTarget.Show();
-                }
-                else
-                {
-                    // Fallback instantiation safety mechanism if form instance was dropped from the memory stack
-                    var fallbackLogin = new LoginDashboard();
-                    fallbackLogin.Show();
-                }
-
-                // Shut down and close the current dashboard instance context state out of memory 
-                this.Close();
+                loginFormTarget.Show();
             }
+            else
+            {
+                new global::Task_Management_System.Dashboard.LoginDashboard().Show();
+            }
+
+            this.Close();
         }
 
-        /// <summary>
-        /// Safely updates controls inside the main panel, preventing visual flickering and solving size overflow constraints.
-        /// </summary>
+        // 📍 CANVAS CONTROLLER: Completely resets the UI container workspace elements and handles layouts
         private void RenderControlToCanvasContainer(XtraUserControl control)
         {
             if (mainContentContainer == null) return;
 
-            // Suspend paint cycles to suppress UI flickering effects during component shifts
             mainContentContainer.SuspendLayout();
-
-            // Clear prior control items without breaking parent references
             mainContentContainer.Controls.Clear();
 
-            // FIX 1: Explicitly tell the user control to match the container's parent size constraints
             control.Size = mainContentContainer.ClientSize;
             control.Dock = DockStyle.Fill;
-
-            // FIX 2: Force DevExpress components inside the control to evaluate scale calculations immediately
             control.Scale(new System.Drawing.SizeF(1F, 1F));
 
             mainContentContainer.Controls.Add(control);
-
-            // Force clean graphics refresh pipeline
             mainContentContainer.ResumeLayout(true);
-
-            // FIX 3: Reset scroll origins to top-left so the view doesn't render off-kilter
             mainContentContainer.ScrollControlIntoView(control);
         }
+    }
+
+    public static class ReflectionExtensions
+    {
+        public static bool HasMethod(this object objectToCheck, string methodName) => 
+            objectToCheck?.GetType().GetMethod(methodName) != null;
     }
 }

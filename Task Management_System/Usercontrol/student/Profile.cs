@@ -15,44 +15,37 @@ namespace Task_Management_System.Usercontrol.student
 {
     public partial class Profile : XtraUserControl
     {
+        // 📍 CONTEXT DATA: Default tracking runtime state fields
         public string CurrentStudentId { get; set; } = "STU-2026-0001";
 
         public Profile()
         {
             InitializeComponent();
 
-            // Wire up event handlers outside designer lifecycle
             btnUploadImage.Click += BtnUploadImage_Click;
             btnChangePassword.Click += BtnChangePassword_Click;
 
-            // Setup modern inline interactive password buttons
             InitializePasswordFields(txtCurrentPassword);
             InitializePasswordFields(txtNewPassword);
             InitializePasswordFields(txtConfirmPassword);
         }
 
-        /// <summary>
-        /// Configures modern inline editor buttons for password visibility toggling inside the textbox.
-        /// </summary>
+        // 📍 PASSWORD OBFUSCATION INTEGRATION: Injects vector action glyphs directly into editor text boxes
         private void InitializePasswordFields(ButtonEdit passwordEdit)
         {
             passwordEdit.Properties.Buttons.Clear();
-
-            // Mask the characters by default
             passwordEdit.Properties.UseSystemPasswordChar = true;
 
-            // Add an elegant vector visibility action right inside the field bounds
             var toggleButton = new EditorButton(ButtonPredefines.Glyph)
             {
                 ImageOptions = { SvgImage = DevExpress.Images.ImageResourceCache.Default.GetSvgImage("actions/eye.svg") },
                 ToolTip = "Show Password",
-                IsLeft = false // Ensures it docks nicely on the right edge side of the control
+                IsLeft = false
             };
 
             passwordEdit.Properties.Buttons.Add(toggleButton);
             passwordEdit.Properties.TextEditStyle = TextEditStyles.Standard;
 
-            // Inline interactive toggle handler
             passwordEdit.ButtonClick += (s, e) =>
             {
                 if (s is ButtonEdit edit)
@@ -73,12 +66,41 @@ namespace Task_Management_System.Usercontrol.student
             };
         }
 
+        // 📍 LIFECYCLE INITIALIZER: Synchronizes active user credentials via global state contexts
         protected override async void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            this.CurrentStudentId = Task_Management_System.Data.SessionContext.ActiveStudentId;
             await RefreshProfileDetailsAsync();
         }
 
+        // 📍 DIRECT HYDRATION DATA BRIDGE: Decouples dynamic object data structures onto interface controls
+        public void InitializeProfileData(dynamic profilePayload)
+        {
+            if (profilePayload == null) return;
+
+            try
+            {
+                string fName = profilePayload.FirstName?.ToString() ?? "";
+                string lName = profilePayload.LastName?.ToString() ?? "";
+                string fullName = string.IsNullOrWhiteSpace(fName + lName) ? "Unassigned Profile Name" : $"{fName} {lName}".Trim();
+
+                string studentId = profilePayload.Student_Id?.ToString() ?? CurrentStudentId;
+                string section = profilePayload.Section?.ToString() ?? "N/A";
+                byte[] profileImageBytes = profilePayload.picture as byte[];
+
+                this.CurrentStudentId = studentId;
+                string generatedEmail = studentId.ToLower() + "@school.edu.ph";
+
+                UpdateUIElements(fullName, studentId, generatedEmail, section, profileImageBytes);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to direct-hydrate profile context mapping: {ex.Message}");
+            }
+        }
+
+        // 📍 DATA FETCH ENGINE: Pulls master record entities from underlying admin storage spaces
         public async Task RefreshProfileDetailsAsync()
         {
             if (string.IsNullOrWhiteSpace(CurrentStudentId))
@@ -91,24 +113,18 @@ namespace Task_Management_System.Usercontrol.student
             try
             {
                 using var db = DatabaseContext.CreateConnection();
+
                 const string queryText = @" 
-                    SELECT StudentId, FullName, Email, Course, ProfileImage 
-                    FROM Students 
-                    WHERE StudentId = @StudentId 
+                    SELECT Student_Id, FirstName, LastName, Section, picture 
+                    FROM Admin 
+                    WHERE Student_Id = @StudentId 
                     LIMIT 1;";
 
                 var row = await db.QueryFirstOrDefaultAsync<dynamic>(queryText, new { StudentId = CurrentStudentId });
 
                 if (row != null)
                 {
-                    var dict = row as IDictionary<string, object>;
-                    string fullName = dict.ContainsKey("FullName") ? dict["FullName"]?.ToString() : "Unassigned Profile Name";
-                    string studentId = dict.ContainsKey("StudentId") ? dict["StudentId"]?.ToString() : CurrentStudentId;
-                    string email = dict.ContainsKey("Email") ? dict["Email"]?.ToString() : "N/A";
-                    string course = dict.ContainsKey("Course") ? dict["Course"]?.ToString() : "N/A";
-                    byte[] profileImageBytes = dict.ContainsKey("ProfileImage") ? dict["ProfileImage"] as byte[] : null;
-
-                    UpdateUIElements(fullName, studentId, email, course, profileImageBytes);
+                    InitializeProfileData(row);
                 }
                 else
                 {
@@ -124,12 +140,13 @@ namespace Task_Management_System.Usercontrol.student
             }
         }
 
+        // 📍 UI ELEMENT BINDING PIPELINE: Updates visual string fields and image canvases smoothly
         private void UpdateUIElements(string name, string studentId, string email, string course, byte[] profileImage)
         {
             lblName.Text = name;
             lblStudentId.Text = "🆔 Student ID: " + studentId;
             lblEmail.Text = "✉️ Email: " + email;
-            lblCourse.Text = "🎓 Course: " + course;
+            lblCourse.Text = "🎓 Section: " + course;
 
             ClearCurrentImage();
 
@@ -151,6 +168,7 @@ namespace Task_Management_System.Usercontrol.student
             }
         }
 
+        // 📍 MEDIA UPDATE WORKSPACE: Parses stream selections to overwrite media canvas nodes inside storage layers
         private async void BtnUploadImage_Click(object sender, EventArgs e)
         {
             if (xtraOpenFileDialog1.ShowDialog() != DialogResult.OK) return;
@@ -170,7 +188,7 @@ namespace Task_Management_System.Usercontrol.student
                 }
 
                 using var db = DatabaseContext.CreateConnection();
-                const string updateCommand = "UPDATE Students SET ProfileImage = @ProfileImage WHERE StudentId = @StudentId;";
+                const string updateCommand = "UPDATE Admin SET picture = @ProfileImage WHERE Student_Id = @StudentId;";
                 int rowsUpdated = await db.ExecuteAsync(updateCommand, new { ProfileImage = imageRawBytes, StudentId = CurrentStudentId });
 
                 if (rowsUpdated > 0)
@@ -187,6 +205,7 @@ namespace Task_Management_System.Usercontrol.student
             }
         }
 
+        // 📍 SECURE VAULT ENGINE: Validates length and values before committing credential updates
         private async void BtnChangePassword_Click(object sender, EventArgs e)
         {
             string oldPassword = txtCurrentPassword.Text.Trim();
@@ -222,7 +241,7 @@ namespace Task_Management_System.Usercontrol.student
                 using var transaction = db.BeginTransaction();
                 try
                 {
-                    const string verifyText = "SELECT Password FROM Users WHERE Username = @StudentId LIMIT 1;";
+                    const string verifyText = "SELECT Password FROM Admin WHERE Student_Id = @StudentId LIMIT 1;";
                     string savedPassword = await db.QueryFirstOrDefaultAsync<string>(verifyText, new { StudentId = CurrentStudentId }, transaction);
 
                     if (savedPassword == null || savedPassword != oldPassword)
@@ -233,7 +252,7 @@ namespace Task_Management_System.Usercontrol.student
                         return;
                     }
 
-                    const string updateText = "UPDATE Users SET Password = @NewPassword WHERE Username = @StudentId;";
+                    const string updateText = "UPDATE Admin SET Password = @NewPassword WHERE Student_Id = @StudentId;";
                     int statusToken = await db.ExecuteAsync(updateText, new { NewPassword = newPassword, StudentId = CurrentStudentId }, transaction);
 
                     if (statusToken > 0)
@@ -264,6 +283,7 @@ namespace Task_Management_System.Usercontrol.student
             }
         }
 
+        // 📍 CANVAS RESET TOOL: Disposes image handles in memory to release unmanaged resources safely
         private void ClearCurrentImage()
         {
             if (pictureEdit1.Image != null)
@@ -274,6 +294,7 @@ namespace Task_Management_System.Usercontrol.student
             }
         }
 
+        // 📍 ASSET FALLBACK AGENT: Assigns placeholder avatars if profile media nodes are unpopulated
         private void AssignFallbackAvatar()
         {
             var placeholderAvatar = Properties.Resources.ResourceManager.GetObject("default_avatar") as Image;

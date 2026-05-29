@@ -8,14 +8,14 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraScheduler;
 using Task_Management_System.Data;
 
-// 🛠️ FIX: Explicit alias definition rules out the ambiguity error cleanly here too!
+// 📍 TYPE ALIAS: Resolves naming ambiguity conflicts with DevExpress.XtraScheduler.Appointment
 using LocalAppointment = Task_Management_System.Models.DbAppointment;
 
 namespace Task_Management_System.Usercontrol.student
 {
     public partial class StudentDashboardOverview : DevExpress.XtraEditors.XtraUserControl
     {
-        // Internal memory list data-binding container layer for the mini calendar
+        // 📍 STORAGE STACK: Data-binding container layer assigned to the overview mini scheduler
         private BindingList<LocalAppointment> dashboardAppointmentsList = new BindingList<LocalAppointment>();
 
         public StudentDashboardOverview()
@@ -23,10 +23,10 @@ namespace Task_Management_System.Usercontrol.student
             InitializeComponent();
             SetupDashboardSchedulerOptions();
 
-            // Wire up asynchronous load event tracking
             this.Load += async (s, e) => await InitializeDashboardDataAsync();
         }
 
+        // 📍 SCHEDULER CONFIGURATION: Maps structural layout properties and enforces strict read-only states
         private void SetupDashboardSchedulerOptions()
         {
             AppointmentMappingInfo mappings = schedulerDataStorage1.Appointments.Mappings;
@@ -43,7 +43,6 @@ namespace Task_Management_System.Usercontrol.student
 
             schedulerDataStorage1.Appointments.DataSource = dashboardAppointmentsList;
 
-            // Structural Constraints: Force Overview to behave within Read-Only limits
             schedulerMini.OptionsCustomization.AllowAppointmentCreate = UsedAppointmentType.None;
             schedulerMini.OptionsCustomization.AllowAppointmentEdit = UsedAppointmentType.None;
             schedulerMini.OptionsCustomization.AllowAppointmentDelete = UsedAppointmentType.None;
@@ -52,11 +51,11 @@ namespace Task_Management_System.Usercontrol.student
             schedulerMini.OptionsCustomization.AllowAppointmentCopy = UsedAppointmentType.None;
         }
 
+        // 📍 LIFECYCLE INITIALIZER: Configures runtime greeting contexts, workspace labels, and triggers metric queries
         public async Task InitializeDashboardDataAsync()
         {
             schedulerMini.Start = DateTime.Today;
 
-            // Update greeting label dynamically based on time of day context
             int currentHour = DateTime.Now.Hour;
             string greeting = "Good Evening";
             if (currentHour < 12) greeting = "Good Morning";
@@ -64,7 +63,6 @@ namespace Task_Management_System.Usercontrol.student
 
             lblWelcome.Text = $"{greeting}, Student!";
 
-            // Reconfigure labels matching data index configurations
             schedulerDataStorage1.Appointments.Labels.Clear();
             schedulerDataStorage1.Appointments.Labels.CreateNewLabel(0, "None", "&None", System.Drawing.SystemColors.Window);
             schedulerDataStorage1.Appointments.Labels.CreateNewLabel(1, "Class", "&Class", System.Drawing.Color.FromArgb(168, 213, 255));
@@ -75,14 +73,13 @@ namespace Task_Management_System.Usercontrol.student
             await RefreshKPIWidgetsAndLoadSchedulerAsync();
         }
 
-        /// <summary>
-        /// Public-facing execution routine to programmatically force a background refresh from external view interactions
-        /// </summary>
+        // 📍 EXTERNAL REFRESH LINK: Programmatic interface exposure to force pipeline synchronization runs
         public async Task RefreshDashboardDataAsync()
         {
             await RefreshKPIWidgetsAndLoadSchedulerAsync();
         }
 
+        // 📍 ASYNC PARALLEL DATA ENGINE: Executes non-blocking database operations to load KPIs and calendars simultaneously
         private async Task RefreshKPIWidgetsAndLoadSchedulerAsync()
         {
             try
@@ -90,9 +87,7 @@ namespace Task_Management_System.Usercontrol.student
                 string currentDayStr = DateTime.Today.ToString("yyyy-MM-dd");
                 string nowStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-                // ⚡ PERFORMANCE OPTIMIZATION: Fire all matrix requests in parallel to eliminate sequential pipeline latency.
-                // 🎯 FIXED: Assigned a localized unique connection mapping statement to each Task pipeline. 
-                // This shields thread execution states from throwing shared SQLite handle lock exceptions.
+                // 📍 ISOLATED THREAD TASKS: Multi-threaded queries targeting unique connection signatures to safeguard SQLite integrity
                 var todayClassesTask = Task.Run(() =>
                 {
                     using (var db = DatabaseContext.CreateConnection())
@@ -129,7 +124,6 @@ namespace Task_Management_System.Usercontrol.student
                     }
                 });
 
-                // Await the completion of all data pulls simultaneously safely
                 await Task.WhenAll(todayClassesTask, pendingTasksTask, upcomingEventsTask, loadAppointmentsTask);
 
                 int todayClassesCount = await todayClassesTask;
@@ -137,15 +131,13 @@ namespace Task_Management_System.Usercontrol.student
                 int upcomingEventsCount = await upcomingEventsTask;
                 var appointments = await loadAppointmentsTask;
 
-                // Isolated delegation method to securely write parameters to the UI component controls
+                // 📍 UI MARSHALING ACTION: Package values securely to dispatch onto control surfaces
                 Action updateUiDelegation = () =>
                 {
-                    // Safely map values into counter card elements
                     lblTodayCount.Text = todayClassesCount.ToString();
                     lblPendingCount.Text = pendingTasksCount.ToString();
                     lblUpcomingCount.Text = upcomingEventsCount.ToString();
 
-                    // Populate the mini calendar component layout
                     schedulerMini.BeginUpdate();
                     try
                     {
@@ -161,7 +153,7 @@ namespace Task_Management_System.Usercontrol.student
                     }
                 };
 
-                // 🛠️ FIX: Avoid silent dropping of data via strict InvokeRequired pattern matching
+                // 📍 CROSS-THREAD DISPATCH CHECK: Safely pushes data modifications back to the UI thread layer
                 if (this.InvokeRequired)
                 {
                     this.Invoke(updateUiDelegation);

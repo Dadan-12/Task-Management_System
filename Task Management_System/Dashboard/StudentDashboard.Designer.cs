@@ -20,9 +20,10 @@ namespace Task_Management_System.Dashboard
             accordionControl1 = new AccordionControl();
             accordionControlElementDashboard = new AccordionControlElement();
             accordionControlElementSchedule = new AccordionControlElement();
+            accordionControlElementClassSchedule = new AccordionControlElement(); // 👈 Added Class Schedule Item
             accordionControlElementTasks = new AccordionControlElement();
             accordionControlElementProfile = new AccordionControlElement();
-            accordionControlElementLogout = new AccordionControlElement(); // Added for navigation integration
+            accordionControlElementLogout = new AccordionControlElement();
             mainContentContainer = new DevExpress.XtraEditors.PanelControl();
 
             ((System.ComponentModel.ISupportInitialize)accordionControl1).BeginInit();
@@ -33,10 +34,11 @@ namespace Task_Management_System.Dashboard
             // accordionControl1
             // 
             accordionControl1.Dock = System.Windows.Forms.DockStyle.Left;
-            // Included the new logout item at the bottom of the list array collection
+            // Included the new class schedule option in the rendering loop list
             accordionControl1.Elements.AddRange(new AccordionControlElement[] {
                 accordionControlElementDashboard,
                 accordionControlElementSchedule,
+                accordionControlElementClassSchedule, // 👈 Added to sidebar layout order
                 accordionControlElementTasks,
                 accordionControlElementProfile,
                 accordionControlElementLogout
@@ -59,6 +61,13 @@ namespace Task_Management_System.Dashboard
             accordionControlElementSchedule.Name = "accordionControlElementSchedule";
             accordionControlElementSchedule.Style = ElementStyle.Item;
             accordionControlElementSchedule.Text = "My Schedule";
+            // 
+            // accordionControlElementClassSchedule
+            // 
+            accordionControlElementClassSchedule.Name = "accordionControlElementClassSchedule";
+            accordionControlElementClassSchedule.Style = ElementStyle.Item;
+            accordionControlElementClassSchedule.Text = "Class Schedule"; // 👈 Label assignment
+            accordionControlElementClassSchedule.Click += accordionControlElementClassSchedule_Click; // 👈 Wired Click Action Handler stub
             // 
             // accordionControlElementTasks
             // 
@@ -114,9 +123,10 @@ namespace Task_Management_System.Dashboard
         private DevExpress.XtraBars.Navigation.AccordionControl accordionControl1;
         private DevExpress.XtraBars.Navigation.AccordionControlElement accordionControlElementDashboard;
         private DevExpress.XtraBars.Navigation.AccordionControlElement accordionControlElementSchedule;
+        private DevExpress.XtraBars.Navigation.AccordionControlElement accordionControlElementClassSchedule; // 👈 Backing instance field
         private DevExpress.XtraBars.Navigation.AccordionControlElement accordionControlElementTasks;
         private DevExpress.XtraBars.Navigation.AccordionControlElement accordionControlElementProfile;
-        private DevExpress.XtraBars.Navigation.AccordionControlElement accordionControlElementLogout; // Declared field
+        private DevExpress.XtraBars.Navigation.AccordionControlElement accordionControlElementLogout;
         private DevExpress.XtraEditors.PanelControl mainContentContainer;
     }
 }

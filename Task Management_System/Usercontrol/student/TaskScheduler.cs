@@ -13,11 +13,10 @@ namespace Task_Management_System.Usercontrol.student
 {
     public partial class TaskScheduler : DevExpress.XtraEditors.XtraUserControl
     {
-        // 🎯 TARGETED: Direct internal data binding targeted cleanly to DbAppointment structures
+        // 📍 STORAGE STACK: Data-binding container layer assigned to the main task scheduler view
         private BindingList<Task_Management_System.Models.DbAppointment> schedulerAppointmentsList = new BindingList<Task_Management_System.Models.DbAppointment>();
 
-        // 🛡️ STATE TRACKER: Tracks if data is currently initializing from the database.
-        // This prevents the scheduler from treating initial loads as new user-created tasks.
+        // 📍 STATE TRACKER: Tracks active background tasks to protect internal database mapping from false data write triggers
         private bool isDataLoading = false;
 
         public TaskScheduler()
@@ -28,11 +27,11 @@ namespace Task_Management_System.Usercontrol.student
             InitializeSchedulerDefaults();
         }
 
+        // 📍 SCHEDULER CONFIGURATION: Maps data-source properties directly to model entity structures
         private void SetupSchedulerConfigurations()
         {
             AppointmentMappingInfo mappings = schedulerDataStorage1.Appointments.Mappings;
 
-            // Property mappings cleanly pointing to DbAppointment structure fields
             mappings.AppointmentId = nameof(Task_Management_System.Models.DbAppointment.UniqueId);
             mappings.Subject = nameof(Task_Management_System.Models.DbAppointment.Subject);
             mappings.Description = nameof(Task_Management_System.Models.DbAppointment.Description);
@@ -43,13 +42,13 @@ namespace Task_Management_System.Usercontrol.student
             mappings.AllDay = nameof(Task_Management_System.Models.DbAppointment.AllDay);
             mappings.Location = nameof(Task_Management_System.Models.DbAppointment.Location);
 
-            // 🎯 FIXED ERROR: Explicitly empty out the ReminderInfo mapping.
-            // This prevents DevExpress from searching for missing properties and resolves SQLite saving crashes.
+            // 📍 REMINDER CONFIGURATION: Forces empty assignments to bypass runtime field validation errors
             mappings.ReminderInfo = "";
 
             schedulerDataStorage1.Appointments.DataSource = schedulerAppointmentsList;
         }
 
+        // 📍 EVENT REGISTRATION: Chains control signals to interactive background update routines
         private void RegisterEventHandlers()
         {
             btnAddNewTask.Click += BtnAddNewTask_Click;
@@ -61,11 +60,13 @@ namespace Task_Management_System.Usercontrol.student
             schedulerDataStorage1.AppointmentsDeleted += SchedulerDataStorage1_AppointmentsDeleted;
         }
 
+        // 📍 CALENDAR SETTINGS: Sets initial calendar view parameters on load execution paths
         private void InitializeSchedulerDefaults()
         {
             schedulerControl1.Start = DateTime.Today;
         }
 
+        // 📍 LIFECYCLE INITIALIZER: Automatically fills local container data maps when window controls instantiate
         protected override async void OnHandleCreated(EventArgs e)
         {
             base.OnHandleCreated(e);
@@ -75,18 +76,17 @@ namespace Task_Management_System.Usercontrol.student
             }
         }
 
+        // 📍 DATA FETCH ENGINE: Pulls unified model records asynchronously via non-blocking queries
         public async Task LoadSchedulerDataAsync()
         {
             if (isDataLoading) return;
 
             try
             {
-                // Set flag to true to lock save/update triggers while pulling records
                 isDataLoading = true;
 
                 using (var db = DatabaseContext.CreateConnection())
                 {
-                    // Unified Dapper mapper retrieval engine pulling from the common table
                     var appointments = await db.QueryAsync<Task_Management_System.Models.DbAppointment>("SELECT * FROM Appointments;");
 
                     if (this.IsHandleCreated)
@@ -117,14 +117,13 @@ namespace Task_Management_System.Usercontrol.student
             }
             finally
             {
-                // Always unlock loading flag state upon routine completion
                 isDataLoading = false;
             }
         }
 
+        // 📍 TRANSACTION BRIDGE: Maps operational fields and targets single records for save or change updates
         private async void SchedulerDataStorage1_AppointmentsSaveOrUpdate(object sender, PersistentObjectsEventArgs e)
         {
-            // 🛡️ INTERCEPT LOADS: Abort database insertion if changes are triggered by data loading routines
             if (isDataLoading) return;
 
             try
@@ -145,7 +144,6 @@ namespace Task_Management_System.Usercontrol.student
                             targetId = apt.Id.ToString();
                         }
 
-                        // Explicit construction utilizing unified DbAppointment namespace structure
                         var model = new Task_Management_System.Models.DbAppointment
                         {
                             UniqueId = targetId,
@@ -184,6 +182,7 @@ namespace Task_Management_System.Usercontrol.student
             }
         }
 
+        // 📍 DELETION DISPATCH LAYER: Cleans database targets based on interactive removal commands
         private async void SchedulerDataStorage1_AppointmentsDeleted(object sender, PersistentObjectsEventArgs e)
         {
             if (isDataLoading) return;
@@ -207,16 +206,13 @@ namespace Task_Management_System.Usercontrol.student
             }
         }
 
-        /// <summary>
-        /// Launches the custom uc_AddTaskAllocation control inside a tidy dialog wrapper window.
-        /// </summary>
+        // 📍 MODAL WINDOW WRAPPER: Generates dynamic allocation dialog windows to run create or edit controls cleanly
         private async void OpenCustomAllocationForm(Task_Management_System.Models.DbAppointment existingAppointment = null)
         {
             using (XtraForm formContainer = new XtraForm())
             {
                 var customAllocationUC = new uc_AddTaskAllocation();
 
-                // If an appointment parameter is passed, inject it into edit mode lifecycle
                 if (existingAppointment != null)
                 {
                     customAllocationUC.LoadAppointmentData(existingAppointment);
@@ -232,10 +228,8 @@ namespace Task_Management_System.Usercontrol.student
                 customAllocationUC.Dock = DockStyle.Fill;
                 formContainer.Controls.Add(customAllocationUC);
 
-                // Blocks active UI code thread execution path until user cancels or saves the entity
                 formContainer.ShowDialog(this);
 
-                // If modifications occurred inside the modal boundary contexts, pull updates from SQLite
                 if (customAllocationUC.ResultAppointment != null)
                 {
                     await LoadSchedulerDataAsync();
@@ -243,11 +237,13 @@ namespace Task_Management_System.Usercontrol.student
             }
         }
 
+        // 📍 INTERACTION DISPATCH: Action wrapper triggering default task allocation workflows
         private void BtnAddNewTask_Click(object sender, EventArgs e)
         {
             OpenCustomAllocationForm();
         }
 
+        // 📍 DISPLAY SWITCH LOGIC: Maps indexing layout controls onto structural DevExpress calendar configurations
         private void RadioGroupViewSwitcher_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedView = radioGroupViewSwitcher.EditValue?.ToString();
@@ -262,6 +258,7 @@ namespace Task_Management_System.Usercontrol.student
             };
         }
 
+        // 📍 CONTEXT MENU CONTROLLER: Strips default layouts and overrides options based on row focus parameters
         private void SchedulerControl1_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
             e.Menu.Items.Clear();
@@ -273,7 +270,6 @@ namespace Task_Management_System.Usercontrol.student
 
                 e.Menu.Items.Add(new DXMenuItem("✏️ Edit Appointment", (s, ev) =>
                 {
-                    // Clean structural unpacking extraction routine targeting the data-source reference object mapping row
                     if (targetedAppointment.GetRow(schedulerDataStorage1) is Task_Management_System.Models.DbAppointment boundModelItem)
                     {
                         OpenCustomAllocationForm(boundModelItem);
@@ -284,6 +280,7 @@ namespace Task_Management_System.Usercontrol.student
             }
         }
 
+        // 📍 CONFIRMATION DIALOG HANDLER: Interrupts execution threads to verify data deletions manually
         private void DeleteAppointmentWithConfirmation()
         {
             if (schedulerControl1.SelectedAppointments.Count == 0) return;

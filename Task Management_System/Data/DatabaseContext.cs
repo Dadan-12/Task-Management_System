@@ -6,16 +6,18 @@ using Dapper;
 
 namespace Task_Management_System.Data
 {
+    /// <summary>
+    /// Provides global database configuration, connection pooling optimization, and automatic schema initialization.
+    /// </summary>
     public static class DatabaseContext
     {
         private static readonly string DbFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
         private static readonly string DbPath = Path.Combine(DbFolder, "DB_TaskManagement.db");
 
-        // 🎯 FIXED: Optimized connection flags to support stable connection pooling across multiple worker threads
         public static readonly string ConnectionString = $"Data Source={DbPath};Cache=Shared;Pooling=True;";
 
         /// <summary>
-        /// Instantiates a clean, opened, thread-safe connection to the SQLite database.
+        /// Instantiates a thread-safe connection instance pointing to the designated SQLite database.
         /// </summary>
         public static IDbConnection CreateConnection()
         {
@@ -27,21 +29,20 @@ namespace Task_Management_System.Data
             var connection = new SqliteConnection(ConnectionString);
             connection.Open();
 
-            // ⚡ PERFORMANCE INJECTION: Execute WAL engine optimizations cleanly via PRAGMA commands to avoid cross-tab lockouts
+            // Execute Write-Ahead Logging (WAL) and performance optimizations
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = "PRAGMA journal_mode=WAL; PRAGMA synchronous=NORMAL;";
                 command.ExecuteNonQuery();
             }
 
-            // Automatically structuralize database layout setup trace
             InitializeDatabaseSchemaInternal(connection);
 
             return connection;
         }
 
         /// <summary>
-        /// Public-facing wrapper to explicitly enforce database validation on startup if needed.
+        /// Public validation wrapper to explicitly enforce database validation on application startup.
         /// </summary>
         public static void InitializeDatabaseSchema()
         {
@@ -53,11 +54,11 @@ namespace Task_Management_System.Data
         }
 
         /// <summary>
-        /// Validates structural integrity and creates tables for user controls if missing.
+        /// Validates database structural integrity and builds out schemas if missing.
         /// </summary>
-        private static void InitializeDatabaseSchemaInternal(SqliteConnection connection)
+        private static void InitializeDatabaseSchemaInternal(IDbConnection connection)
         {
-            // 1. Users Table (🎯 FIXED: Removed illegal trailing syntax characters)
+            // Table 1: Security Logins Registry
             connection.Execute(@"
                 CREATE TABLE IF NOT EXISTS Users (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -65,7 +66,7 @@ namespace Task_Management_System.Data
                     Password TEXT NOT NULL
                 );");
 
-            // 2. Students Table
+            // Table 2: Student Basic Demographics Registry
             connection.Execute(@"
                 CREATE TABLE IF NOT EXISTS Students (
                     StudentId TEXT PRIMARY KEY,
@@ -77,7 +78,7 @@ namespace Task_Management_System.Data
                     ProfileImage BLOB
                 );");
 
-            // 3. StudentTask Table
+            // Table 3: Assignments and Task Logs Tracker
             connection.Execute(@"
                 CREATE TABLE IF NOT EXISTS StudentTask (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -90,7 +91,7 @@ namespace Task_Management_System.Data
                     FOREIGN KEY (StudentID) REFERENCES Students(StudentId) ON DELETE CASCADE
                 );");
 
-            // 4. Appointments Table (Powers DevExpress Scheduler)
+            // Table 4: Scheduler Storage (Powers DevExpress Scheduler UI Components)
             connection.Execute(@"
                 CREATE TABLE IF NOT EXISTS Appointments (
                     UniqueId TEXT PRIMARY KEY,
@@ -105,7 +106,7 @@ namespace Task_Management_System.Data
                     ReminderInfo TEXT
                 );");
 
-            // 5. Dashboard Announcements Table (Powers Home overview stream)
+            // Table 5: Shared Notice Board and System Announcements Data Stream
             connection.Execute(@"
                 CREATE TABLE IF NOT EXISTS DashboardAnnouncements (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -115,11 +116,11 @@ namespace Task_Management_System.Data
                     Priority INTEGER DEFAULT 0
                 );");
 
-            // 6. Admin Table (🎯 FIXED: Injected missing table required by your schema specification)
+            // Table 6: Administrator Profiles and Permissions Matrix
             connection.Execute(@"
                 CREATE TABLE IF NOT EXISTS Admin (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    picture BLOB,
+                    Image BLOB,
                     Student_Id TEXT,
                     FirstName TEXT,
                     LastName TEXT,
@@ -127,7 +128,40 @@ namespace Task_Management_System.Data
                     Date TEXT
                 );");
 
-            // 🔄 BACKWARD COMPATIBILITY SCHEMA MIGRATIONS
+            // Table 7: Academic Course Timetables and Room Allocation Registry
+            // 🎯 FIXED: Integrated Title and Section attributes directly into the core layout template
+            connection.Execute(@"
+                CREATE TABLE IF NOT EXISTS ClassSchedule (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Student_Id TEXT NOT NULL,
+                    Title TEXT,
+                    Subject TEXT,
+                    Description TEXT,
+                    Section TEXT,
+                    Room TEXT,
+                    DayOfWeek TEXT,
+                    StartTime TEXT,
+                    EndTime TEXT
+                );");
+
+            // 🔄 SAFE LIVE MIGRATION ROUTINE: Automatically appends missing column descriptors into running instances safely
+            try
+            {
+                var titleCheck = connection.ExecuteScalar<string>("SELECT name FROM pragma_table_info('ClassSchedule') WHERE name='Title';");
+                if (string.IsNullOrEmpty(titleCheck))
+                {
+                    connection.Execute("ALTER TABLE ClassSchedule ADD COLUMN Title TEXT;");
+                }
+
+                var sectionCheck = connection.ExecuteScalar<string>("SELECT name FROM pragma_table_info('ClassSchedule') WHERE name='Section';");
+                if (string.IsNullOrEmpty(sectionCheck))
+                {
+                    connection.Execute("ALTER TABLE ClassSchedule ADD COLUMN Section TEXT;");
+                }
+            }
+            catch (SqliteException) { /* Managed gracefully */ }
+
+            // Safe Backward-Compatibility Schema Data Migration Triggers
             try
             {
                 if (connection.ExecuteScalar<int>("SELECT COUNT(1) FROM sqlite_master WHERE type='table' AND name='StudentProfile';") > 0)
@@ -137,7 +171,7 @@ namespace Task_Management_System.Data
                         SELECT StudentId, FullName, Email, Course, Phone, PasswordHash FROM StudentProfile;");
                 }
             }
-            catch (SqliteException) { /* Handled safely */ }
+            catch (SqliteException) { }
 
             try
             {
@@ -148,51 +182,51 @@ namespace Task_Management_System.Data
                         SELECT Username, Password FROM User;");
                 }
             }
-            catch (SqliteException) { /* Handled safely */ }
+            catch (SqliteException) { }
 
-
-            // 📦 SEED DEFAULT RECORDS FOR TESTING LOGINS
-            // Seeds 'STU-2026-0001' account
-            if (connection.ExecuteScalar<int>("SELECT COUNT(1) FROM Students WHERE StudentId = 'STU-2026-0001';") == 0)
+            // Safe Data Initialization: Seed testing profiles if completely empty
+            if (connection.ExecuteScalar<int>("SELECT COUNT(1) FROM Students WHERE StudentId = @StudentId;", new { StudentId = "STU-2026-0001" }) == 0)
             {
                 connection.Execute(@"
                     INSERT INTO Students (StudentId, FullName, Email, Course, Phone, PasswordHash, ProfileImage)
-                    VALUES ('STU-2026-0001', 'Administrator', 'admin@university.edu', 'B.S. Computer Science', '+1 (555) 019-2834', '123', NULL);");
+                    VALUES (@StudentId, 'Administrator', 'admin@university.edu', 'B.S. Computer Science', '+1 (555) 019-2834', '123', NULL);",
+                    new { StudentId = "STU-2026-0001" });
             }
-            if (connection.ExecuteScalar<int>("SELECT COUNT(1) FROM Users WHERE Username = 'STU-2026-0001';") == 0)
+            if (connection.ExecuteScalar<int>("SELECT COUNT(1) FROM Users WHERE Username = @Username;", new { Username = "STU-2026-0001" }) == 0)
             {
                 connection.Execute(@"
                     INSERT INTO Users (Username, Password)
-                    VALUES ('STU-2026-0001', '123');");
+                    VALUES (@Username, '123');",
+                    new { Username = "STU-2026-0001" });
             }
 
-            // Seeds '2016-0474' account
-            if (connection.ExecuteScalar<int>("SELECT COUNT(1) FROM Students WHERE StudentId = '2016-0474';") == 0)
+            if (connection.ExecuteScalar<int>("SELECT COUNT(1) FROM Students WHERE StudentId = @StudentId;", new { StudentId = "2016-0474" }) == 0)
             {
                 connection.Execute(@"
                     INSERT INTO Students (StudentId, FullName, Email, Course, Phone, PasswordHash, ProfileImage)
-                    VALUES ('2016-0474', 'Khimuel Diamante', 'khimueld_diamante@dmc.edu.ph', 'IT', '093524656', 'KhimzUgh', NULL);");
+                    VALUES (@StudentId, 'Khimuel Diamante', 'khimueld_diamante@dmc.edu.ph', 'IT', '093524656', 'KhimzUgh', NULL);",
+                    new { StudentId = "2016-0474" });
             }
-            if (connection.ExecuteScalar<int>("SELECT COUNT(1) FROM Users WHERE Username = '2016-0474';") == 0)
+            if (connection.ExecuteScalar<int>("SELECT COUNT(1) FROM Users WHERE Username = @Username;", new { Username = "2016-0474" }) == 0)
             {
                 connection.Execute(@"
                     INSERT INTO Users (Username, Password)
-                    VALUES ('2016-0474', 'KhimzUgh');");
+                    VALUES (@Username, 'KhimzUgh');",
+                    new { Username = "2016-0474" });
             }
 
-            // Ensure 'admin' user profile structure exists inside BOTH tables explicitly to prevent sync failures
-            if (connection.ExecuteScalar<int>("SELECT COUNT(1) FROM Users WHERE Username = 'admin';") == 0)
+            if (connection.ExecuteScalar<int>("SELECT COUNT(1) FROM Users WHERE Username = @Username;", new { Username = "admin" }) == 0)
             {
-                connection.Execute("INSERT INTO Users (Username, Password) VALUES ('admin', '123');");
+                connection.Execute("INSERT INTO Users (Username, Password) VALUES (@Username, '123');", new { Username = "admin" });
             }
-            if (connection.ExecuteScalar<int>("SELECT COUNT(1) FROM Students WHERE StudentId = 'admin';") == 0)
+            if (connection.ExecuteScalar<int>("SELECT COUNT(1) FROM Students WHERE StudentId = @StudentId;", new { StudentId = "admin" }) == 0)
             {
                 connection.Execute(@"
                     INSERT INTO Students (StudentId, FullName, Email, Course, Phone, PasswordHash, ProfileImage)
-                    VALUES ('admin', 'System Administrator', 'admin@dmc.edu.ph', 'IT Management', '00000', '123', NULL);");
+                    VALUES (@StudentId, 'System Administrator', 'admin@dmc.edu.ph', 'IT Management', '00000', '123', NULL);",
+                    new { StudentId = "admin" });
             }
 
-            // Seeding Default Announcements if empty
             if (connection.ExecuteScalar<int>("SELECT COUNT(1) FROM DashboardAnnouncements;") == 0)
             {
                 connection.Execute(@"

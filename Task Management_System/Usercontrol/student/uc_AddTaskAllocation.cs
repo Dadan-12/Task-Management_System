@@ -16,7 +16,7 @@ namespace Task_Management_System.Usercontrol.student
 {
     public partial class uc_AddTaskAllocation : DevExpress.XtraEditors.XtraUserControl
     {
-        // Exposes the committed model to parent view to instantly refresh the schedule interface layout
+        // 📍 PROPERTY INTERFACE: Exposes the committed model back to parent controls for scheduling list synchronizations
         public DbAppointment ResultAppointment { get; private set; }
         private string existingUniqueId = null;
         private bool isEditMode = false;
@@ -28,9 +28,7 @@ namespace Task_Management_System.Usercontrol.student
             RegisterLiveEventHandlers();
         }
 
-        /// <summary>
-        /// Seeds localized selection data matrix and time offsets on instantiation layouts safely
-        /// </summary>
+        // 📍 DEFAULTS INITIALIZER: Seeds initial time values and configuration dropdown collections safely
         private void InitializeDefaultValues()
         {
             dateEditStart.DateTime = DateTime.Today.AddHours(9);
@@ -46,27 +44,21 @@ namespace Task_Management_System.Usercontrol.student
             comboStatus.SelectedIndex = 0;
         }
 
-        /// <summary>
-        /// Registers state change listeners for fluid UI interactions
-        /// </summary>
+        // 📍 EVENT REGISTRATION: Hooks component signals onto real-time reactive interface routines
         private void RegisterLiveEventHandlers()
         {
             chkAllDay.CheckedChanged += ChkAllDay_CheckedChanged;
         }
 
-        /// <summary>
-        /// Dynamically alters the calendar picker masks based on full-day allocation configurations
-        /// </summary>
+        // 📍 MASK CONTROLLER: Dynamically updates DevExpress calendar picker masks and date boundary alignments based on all-day flags
         private void ChkAllDay_CheckedChanged(object sender, EventArgs e)
         {
             if (chkAllDay.Checked)
             {
-                // Format display to strictly render calendar dates without timestamps
                 dateEditStart.Properties.DisplayFormat.FormatString = "d";
                 dateEditStart.Properties.EditFormat.FormatString = "d";
                 dateEditStart.Properties.MaskSettings.Set("mask", "d");
 
-                // Hide the time edit portion safely using DevExpress properties
                 dateEditStart.Properties.CalendarTimeEditing = DevExpress.Utils.DefaultBoolean.False;
                 dateEditStart.Properties.CalendarView = DevExpress.XtraEditors.Repository.CalendarView.Default;
 
@@ -74,22 +66,18 @@ namespace Task_Management_System.Usercontrol.student
                 dateEditEnd.Properties.EditFormat.FormatString = "d";
                 dateEditEnd.Properties.MaskSettings.Set("mask", "d");
 
-                // Hide the time edit portion safely using DevExpress properties
                 dateEditEnd.Properties.CalendarTimeEditing = DevExpress.Utils.DefaultBoolean.False;
                 dateEditEnd.Properties.CalendarView = DevExpress.XtraEditors.Repository.CalendarView.Default;
 
-                // Snap current boundaries to clean calendar date bounds
                 dateEditStart.DateTime = dateEditStart.DateTime.Date;
                 dateEditEnd.DateTime = dateEditEnd.DateTime.Date.AddHours(23).AddMinutes(59).AddSeconds(59);
             }
             else
             {
-                // Restore precision timeline parameters with embedded drop-down clocks
                 dateEditStart.Properties.DisplayFormat.FormatString = "g";
                 dateEditStart.Properties.EditFormat.FormatString = "g";
                 dateEditStart.Properties.MaskSettings.Set("mask", "g");
 
-                // Restore the time edit section layout
                 dateEditStart.Properties.CalendarTimeEditing = DevExpress.Utils.DefaultBoolean.True;
                 dateEditStart.Properties.CalendarView = DevExpress.XtraEditors.Repository.CalendarView.Vista;
 
@@ -97,15 +85,12 @@ namespace Task_Management_System.Usercontrol.student
                 dateEditEnd.Properties.EditFormat.FormatString = "g";
                 dateEditEnd.Properties.MaskSettings.Set("mask", "g");
 
-                // Restore the time edit section layout
                 dateEditEnd.Properties.CalendarTimeEditing = DevExpress.Utils.DefaultBoolean.True;
                 dateEditEnd.Properties.CalendarView = DevExpress.XtraEditors.Repository.CalendarView.Vista;
             }
         }
 
-        /// <summary>
-        /// Populates text metrics and changes button execution branches when passing selected entries to edit
-        /// </summary>
+        // 📍 DATA INJECTION LAYER: Populates editing properties and adjusts button copy when initializing inside edit lifecycles
         public void LoadAppointmentData(DbAppointment appointment)
         {
             if (appointment == null) return;
@@ -117,13 +102,11 @@ namespace Task_Management_System.Usercontrol.student
             txtDescription.Text = appointment.Description;
             txtLocation.Text = appointment.Location;
 
-            // Setting this triggers ChkAllDay_CheckedChanged to apply correct date format constraints automatically
             chkAllDay.Checked = appointment.AllDay;
 
             if (DateTime.TryParse(appointment.StartTime, out DateTime start)) dateEditStart.DateTime = start;
             if (DateTime.TryParse(appointment.EndTime, out DateTime end)) dateEditEnd.DateTime = end;
 
-            // Boundary validation safety layout constraints
             comboLabel.SelectedIndex = Math.Min(appointment.LabelKey, comboLabel.Properties.Items.Count - 1);
             comboStatus.SelectedIndex = Math.Min(appointment.StatusKey, comboStatus.Properties.Items.Count - 1);
 
@@ -131,9 +114,9 @@ namespace Task_Management_System.Usercontrol.student
             btnSave.Text = "Update Allocation";
         }
 
+        // 📍 PERSISTENCE PIPELINE: Validates entry variables and fires an atomic async SQLite Upsert transaction
         private async void BtnSave_Click(object sender, EventArgs e)
         {
-            // Business Rule Validation Barriers
             if (string.IsNullOrWhiteSpace(txtSubject.Text))
             {
                 XtraMessageBox.Show(this, "Please provide a valid Subject Title for this allocation.", "Validation Alert", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -149,14 +132,12 @@ namespace Task_Management_System.Usercontrol.student
             DateTime adjustedStart = dateEditStart.DateTime;
             DateTime adjustedEnd = dateEditEnd.DateTime;
 
-            // Normalize boundaries explicitly before committing into persistent database rows
             if (chkAllDay.Checked)
             {
                 adjustedStart = adjustedStart.Date;
                 adjustedEnd = adjustedEnd.Date.AddDays(1).AddSeconds(-1);
             }
 
-            // Assemble clean model packet mapping definitions
             ResultAppointment = new DbAppointment
             {
                 UniqueId = isEditMode ? existingUniqueId : Guid.NewGuid().ToString(),
@@ -175,7 +156,6 @@ namespace Task_Management_System.Usercontrol.student
             {
                 using (var db = DatabaseContext.CreateConnection())
                 {
-                    // SQLite atomic Upsert statement matching your table structure 
                     string sql = @"
                         INSERT INTO Appointments (UniqueId, Subject, Description, StartTime, EndTime, LabelKey, StatusKey, AllDay, Location, ReminderInfo)
                         VALUES (@UniqueId, @Subject, @Description, @StartTime, @EndTime, @LabelKey, @StatusKey, @AllDay, @Location, @ReminderInfo)
@@ -193,7 +173,6 @@ namespace Task_Management_System.Usercontrol.student
                     await db.ExecuteAsync(sql, ResultAppointment);
                 }
 
-                // Smooth execution exit: Find the active form container context instance hosting this object control and shut it down cleanly
                 this.FindForm()?.Close();
             }
             catch (Exception ex)
@@ -202,6 +181,7 @@ namespace Task_Management_System.Usercontrol.student
             }
         }
 
+        // 📍 INTERACTION TERMINATOR: Resets model references and exits out of the active modal wrapper window cleanly
         private void BtnCancel_Click(object sender, EventArgs e)
         {
             ResultAppointment = null;
